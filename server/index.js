@@ -56,7 +56,7 @@ todoRoutes.route('/:id').put((req, res) => {
     todo
       .save()
       .then(() => {
-        res.json('Todo updated!');
+        res.json('Budget updated!');
       })
       .catch(() => {
         res.status(400).send('Update not possible');
@@ -73,7 +73,7 @@ todoRoutes.route('/:id').delete((req, res) => {
     todo
       .remove()
       .then(() => {
-        res.json('Todo deleted!');
+        res.json('Budget deleted!');
       })
       .catch(() => {
         res.status(400).send('Update not possible');
@@ -87,7 +87,7 @@ todoRoutes.route('/add').post((req, res) => {
   todo
     .save()
     .then(() => {
-      res.status(200).json({ todo: 'todo added successfully' });
+      res.status(200).json({ todo: 'Budget added successfully' });
     })
     .catch(() => {
       res.status(400).send('adding new todo failed');
