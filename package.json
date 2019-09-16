@@ -1,5 +1,5 @@
 {
-  "name": "mern-todo-app",
+  "name": "Budgety",
   "version": "1.0.0",
   "description": "This app would be my starting point of any future apps.",
   "main": "index.js",
@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kendyl93/mern-todo-app.git"
+    "url": "git+https://github.com/kendyl93/Budgety.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kendyl93/mern-todo-app/issues"
+    "url": "https://github.com/kendyl93/Budgety/issues"
   },
-  "homepage": "https://github.com/kendyl93/mern-todo-app#readme",
+  "homepage": "https://github.com/kendyl93/Budgety#readme",
   "devDependencies": {
     "babel-eslint": "^10.0.2",
     "concurrently": "^4.1.1",
