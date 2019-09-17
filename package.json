@@ -12,7 +12,7 @@
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
     "install-sign-in-server": "cd sign-in-server && npm install",
-    "install-reverse-proxy": "cd server && npm reverse-proxy",
+    "install-reverse-proxy": "cd server && npm install",
     "postinstall": "concurrently \"npm run install-reverse-proxy\" \"npm run install-sign-in-server\" \"npm run install-server\" \"npm run install-client\"",
     "server": "cd server && npm run start",
     "sign-in-server": "cd sign-in-server && npm run start",

@@ -10,9 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esm": "^3.2.25",
-    "redbird": "^0.9.1",
     "@babel/core": "^7.5.5",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/preset-react": "^7.0.0",
+    "dotenv": "^8.1.0",
+    "esm": "^3.2.25",
+    "redbird": "^0.9.1"
   }
 }

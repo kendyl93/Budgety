@@ -14,6 +14,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: '[chunkhash].bundle.js'
   },
+  devServer: { compress: true, port: 3000, contentBase: './dist' },
   optimization: {
     splitChunks: {
       chunks: 'all',

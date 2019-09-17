@@ -1,7 +1,7 @@
 import redbird from 'redbird';
+import { PORT, HOST_URI } from './environment';
+const proxy = redbird({ port: PORT });
 
-const proxy = redbird({ port: 5470 });
-
-proxy.register('localhost/sign-in', 'http://localhost:8050/sign-in');
-proxy.register('localhost/api', 'http://localhost:4000/api');
-proxy.register('localhost/', 'http://localhost:8081');
+proxy.register(`${HOST_URI}/sign-in`, `http://${HOST_URI}:8050/sign-in`);
+proxy.register(`${HOST_URI}/api`, `http://${HOST_URI}:4000/api`);
+proxy.register(`${HOST_URI}/`, `http://${HOST_URI}:3000`);
