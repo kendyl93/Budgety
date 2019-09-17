@@ -5,7 +5,7 @@
   "main": "index.js",
   "homepage": ".",
   "scripts": {
-    "start": "webpack-dev-server --mode development --config webpack.config.development.js --open",
+    "start": "webpack-dev-server --mode development --config webpack.config.development.js",
     "build": "webpack --mode production --config webpack.config.production.js",
     "test": "jest"
   },
