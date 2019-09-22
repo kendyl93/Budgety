@@ -6,6 +6,7 @@
   "homepage": ".",
   "scripts": {
     "start": "webpack-dev-server --mode development --config webpack.config.development.js",
+    "start:production": "NODE_ENV=production node -r esm static-server.js",
     "build": "webpack --mode production --config webpack.config.production.js",
     "test": "jest"
   },
@@ -19,6 +20,9 @@
     "@babel/preset-react": "^7.0.0",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1"
