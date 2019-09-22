@@ -2,10 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const { parsed: env } = require('dotenv').config({
-  path: path.join(__dirname, '../.client.production.env')
-});
-
 module.exports = {
   entry: {
     entry: ['@babel/polyfill', './src/index.js']
@@ -72,9 +68,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       favicon: './public/favicon.ico',
-      ENVIRONMENT: `<script>window.process = { env: ${JSON.stringify(
-        env
-      )} };</script>`,
       template: './public/index.ejs'
     }),
     new MiniCssExtractPlugin({

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const { HOST_URI } = window.process.env;
-const endpoint = query => `${HOST_URI}/${query}`;
+const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env;
+const FULL_HOST_URI =
+  NODE_ENV === 'production'
+    ? `http://${HOST_URI}`
+    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
+
+const endpoint = query => `${FULL_HOST_URI}/${query}`;
 
 const onChange = set => event => set(event.target.value);
 

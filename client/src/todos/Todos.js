@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 
 import completedImg from '../images/OK.png';
 
-const { HOST_URI } = window.process.env;
+const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env;
+const FULL_HOST_URI =
+  NODE_ENV === 'production'
+    ? `http://${HOST_URI}`
+    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
 
 const fetchData = async setTodos => {
-  const result = await axios(`${HOST_URI}/api`);
+  const result = await axios(`${FULL_HOST_URI}/api`);
 
   setTodos(result.data);
 };

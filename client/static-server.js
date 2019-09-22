@@ -1,7 +1,10 @@
 import express from 'express';
 import fs from 'fs';
+import { CLIENT_PORT, HOST_URI } from './environment';
 
-const config = {};
+const config = { CLIENT_PORT, HOST_URI };
+
+console.log({ CLIENT_PORT, HOST_URI });
 
 const app = express();
 app.use(express.static('./dist'));
@@ -20,6 +23,6 @@ app.get('*', (_, res) => {
   res.send(200, body);
 });
 
-app.listen(3000, () => {
-  console.log('Sign in server is running on Port: ' + 3000);
+app.listen(CLIENT_PORT, () => {
+  console.log('Client static server is running on Port: ' + CLIENT_PORT);
 });
