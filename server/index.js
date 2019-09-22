@@ -1,5 +1,5 @@
 import { db_connect } from './db';
-import { PORT } from './environment';
+import { BACKEND_PORT } from './environment';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -94,6 +94,6 @@ todoRoutes.route('/add').post((req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-  console.log('Server is running on Port: ' + PORT);
+app.listen(BACKEND_PORT, () => {
+  console.log('Backend server is running on Port: ' + BACKEND_PORT);
 });

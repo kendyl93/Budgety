@@ -1,11 +1,6 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv/config');
 
-const { NODE_ENV } = process.env;
-const devEnv = {
-  PORT: 4000,
-  DB_URI: 'mongodb://localhost:27017/budgety'
-};
+export const { NODE_ENV, BACKEND_PORT, DB_URI } = process.env;
 
-export const { PORT, DB_URI } =
-  NODE_ENV === 'production' ? process.env : devEnv;
+console.log('BACKEND SERVER:');
+console.log({ NODE_ENV, BACKEND_PORT, DB_URI });

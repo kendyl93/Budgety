@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development node -r esm index.js",
-    "start:production": "NODE_ENV=production node -r esm index.js"
+    "start": "NODE_ENV=development node -r esm index.js dotenv_config_path=../.development.env",
+    "start:production": "NODE_ENV=production node -r esm index.js dotenv_config_path=../.env"
   },
   "author": "",
   "license": "ISC",

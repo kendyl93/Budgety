@@ -1,10 +1,6 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv/config');
 
-const { NODE_ENV } = process.env;
-const devEnv = {
-  HOST_URI_ALONE: 'localhost'
-};
+export const { NODE_ENV, HOST_URI, REVERSE_PROXY_PORT } = process.env;
 
-export const { HOST_URI_ALONE } =
-  NODE_ENV === 'production' ? process.env : devEnv;
+console.log('REVERSE-PROXY SERVER:');
+console.log({ NODE_ENV, HOST_URI, REVERSE_PROXY_PORT });
