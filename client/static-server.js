@@ -3,11 +3,12 @@ import fs from 'fs';
 import { CLIENT_PORT, HOST_URI } from './environment';
 
 const config = { CLIENT_PORT, HOST_URI };
+console.log({ config });
 
 const app = express();
 app.use(express.static('./dist'));
 
-const ejs = fs.readFileSync('./public/index.ejs', 'utf8');
+const ejs = fs.readFileSync('./dist/index.ejs', 'utf8');
 
 const INJECT_TAG = '<!-- ENVIRONMENT -->';
 
