@@ -4,8 +4,6 @@ import { CLIENT_PORT, HOST_URI } from './environment';
 
 const config = { CLIENT_PORT, HOST_URI };
 
-console.log({ CLIENT_PORT, HOST_URI });
-
 const app = express();
 app.use(express.static('./dist'));
 

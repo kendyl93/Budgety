@@ -57,7 +57,7 @@ module.exports = {
       ENVIRONMENT: `<script>window.process = { env: ${JSON.stringify(
         env
       )} };</script>`,
-      template: './public/index.ejs'
+      template: './index.ejs'
     }),
     new MiniCssExtractPlugin({
       filename: 'main.css'

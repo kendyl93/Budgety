@@ -6,8 +6,8 @@
   "homepage": ".",
   "scripts": {
     "start": "webpack-dev-server --mode development --config webpack.config.development.js",
-    "start:production": "NODE_ENV=production node -r esm static-server.js",
-    "build": "webpack --mode production --config webpack.config.production.js",
+    "start:production": "NODE_ENV=production node -r esm static-server.js  dotenv_config_path=../.env",
+    "build": "webpack --mode production --config webpack.config.js",
     "test": "jest"
   },
   "author": "",
