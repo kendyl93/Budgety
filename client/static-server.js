@@ -1,25 +1,12 @@
 import express from 'express';
+import { CLIENT_PORT } from './environment';
 import fs from 'fs';
-import { CLIENT_PORT, HOST_URI } from './environment';
-
-const config = { CLIENT_PORT, HOST_URI };
-console.log({ config });
 
 const app = express();
 app.use(express.static('./dist'));
 
-const ejs = fs.readFileSync('./dist/index.ejs', 'utf8');
-
-const INJECT_TAG = '<!-- ENVIRONMENT -->';
-
-const environmentScript = config =>
-  `<script>window.process = { env: ${JSON.stringify(config)} };</script>`;
-
-const template = config => ejs.replace(INJECT_TAG, environmentScript(config));
-
 app.get('*', (_, res) => {
-  const body = template(config);
-  res.send(200, body);
+  res.sendFile('index.js');
 });
 
 app.listen(CLIENT_PORT, () => {
