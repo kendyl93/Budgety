@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 const todoRoutes = express.Router();
-const Todo = require('./model');
+const Todo = require('./Todo');
 
 const app = express();
 app.use(cors());

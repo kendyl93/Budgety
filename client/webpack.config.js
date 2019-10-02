@@ -1,9 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { parsed: env } = require('dotenv').config({
-  path: path.join(__dirname, '../.client.production.env')
-});
 
 module.exports = {
   entry: {
@@ -70,10 +67,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      ENVIRONMENT: `<script>window.process = { env: ${JSON.stringify(
-        env
-      )} };</script>`,
-      template: './index.ejs'
+      filename: 'index.ejs',
+      template: './index.html'
     }),
     new MiniCssExtractPlugin({
       filename: 'main.css'

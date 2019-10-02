@@ -22,6 +22,9 @@ console.log({
 const app = express();
 app.use(cors());
 
+// const usersRoutes = express.Router();
+// const Users = require('./Users');
+
 passport.use(
   new FacebookStrategy(
     {
@@ -30,9 +33,9 @@ passport.use(
       callbackURL: SIGN_IN_FACEBOOK_CALLBACK
     },
     (accessToken, refreshToken, profile, done) => {
-      User.findOrCreate({ facebookId: profile.id }, (err, user) => {
-        return cb(err, user);
-      });
+      // User.findOrCreate({ facebookId: profile.id }, (err, user) => {
+      //   return cb(err, user);
+      // });
     }
   )
 );

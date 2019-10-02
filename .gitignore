@@ -10,4 +10,3 @@
 .DS_Store
 .env
 .development.env
-.client.production.env

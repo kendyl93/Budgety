@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import completedImg from '../images/OK.png';
 
-const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env;
+const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env || {};
 const FULL_HOST_URI =
   NODE_ENV === 'production'
     ? `http://${HOST_URI}`
