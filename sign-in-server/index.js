@@ -37,7 +37,7 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       const body = {
-        facebookId: profile.id, //need to investigate what Id should I assigned to the user. I would like to add more strategies
+        facebookId: profile.id, //need to investigate what Id should I assigned to the user. I would like to add more strategies. Maybe use NODE-UUID.
         name: profile.displayName,
         provider: profile.provider,
         accessToken
