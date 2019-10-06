@@ -27,7 +27,7 @@ class Edit extends Component {
     } = this.props;
     const {
       data: { description, responsible, priority, completed }
-    } = await axios(`${FULL_HOST_URI}/api/${id}`);
+    } = await axios(`${FULL_HOST_URI}/api/todos/${id}`);
 
     this.setState({
       description,
@@ -47,7 +47,7 @@ class Edit extends Component {
     } = this.props;
     const todo = this.state;
 
-    await axios.put(`${FULL_HOST_URI}/api/${id}`, todo);
+    await axios.put(`${FULL_HOST_URI}/api/todos/${id}`, todo);
 
     this.props.history.push('/');
   };
@@ -59,7 +59,7 @@ class Edit extends Component {
       }
     } = this.props;
 
-    await axios.delete(`${FULL_HOST_URI}/api/${id}`);
+    await axios.delete(`${FULL_HOST_URI}/api/todos/${id}`);
 
     this.props.history.push('/');
   };

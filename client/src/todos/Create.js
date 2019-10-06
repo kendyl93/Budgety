@@ -33,7 +33,9 @@ const Create = () => {
 
     const todo = { description, responsible, priority, completed };
 
-    axios.post(endpoint('api/add'), todo).then(res => console.log(res.data));
+    axios
+      .post(endpoint('api/todos/add'), todo)
+      .then(res => console.log(res.data));
 
     clearState();
   };

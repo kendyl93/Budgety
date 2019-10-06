@@ -7,12 +7,53 @@ import cors from 'cors';
 const todoRoutes = express.Router();
 const Todo = require('./Todo');
 
+const userRoutes = express.Router();
+const User = require('./Users');
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/api', todoRoutes);
+app.use('/api/todos', todoRoutes);
+app.use('/api/users', userRoutes);
 
 db_connect();
+
+userRoutes.route('/').get((req, res) => {
+  User.find((err, users) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(users);
+    }
+  });
+});
+
+userRoutes.route('/facebook').post(async (req, res) => {
+  const {
+    user: { _id: id }
+  } = req.body;
+
+  try {
+    const userExist = await User.find({ _id: id });
+
+    if (!userExist) {
+      const user = new User(req.body);
+
+      console.log({ user });
+      await user.save();
+
+      res.redirect('/');
+    }
+
+    console.log('User already exist');
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(404);
+  }
+});
+
+///////////////////////////////
 
 todoRoutes.route('/').get((req, res) => {
   Todo.find((err, todos) => {

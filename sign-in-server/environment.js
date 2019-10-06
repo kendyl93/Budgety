@@ -1,6 +1,7 @@
 require('dotenv/config');
 
 const {
+  DB_URI,
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
   FACEBOOK_CALLBACK,
@@ -12,6 +13,7 @@ const {
 const SIGN_IN_FACEBOOK_CALLBACK = `http://${HOST_URI}:${REVERSE_PROXY_PORT}/sign-in/${FACEBOOK_CALLBACK}`;
 
 export {
+  DB_URI,
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
   FACEBOOK_CALLBACK,

@@ -9,6 +9,7 @@ import {
   SIGN_IN_PORT,
   SIGN_IN_FACEBOOK_CALLBACK
 } from './environment';
+import fetch from 'node-fetch';
 
 console.log('SIGN IN server');
 console.log({
@@ -22,8 +23,10 @@ console.log({
 const app = express();
 app.use(cors());
 
-// const usersRoutes = express.Router();
-// const Users = require('./Users');
+const userRoutes = express.Router();
+
+app.use('/api/users', userRoutes);
+app.use(passport.initialize());
 
 passport.use(
   new FacebookStrategy(
@@ -33,9 +36,13 @@ passport.use(
       callbackURL: SIGN_IN_FACEBOOK_CALLBACK
     },
     (accessToken, refreshToken, profile, done) => {
-      // User.findOrCreate({ facebookId: profile.id }, (err, user) => {
-      //   return cb(err, user);
-      // });
+      const body = {
+        facebookId: profile.id, //need to investigate what Id should I assigned to the user. I would like to add more strategies
+        name: profile.displayName,
+        provider: profile.provider,
+        accessToken
+      };
+      return done(null, body);
     }
   )
 );
@@ -45,9 +52,25 @@ app.get('/sign-in', passport.authenticate('facebook'));
 app.get(
   `/sign-in/${FACEBOOK_CALLBACK}`,
   passport.authenticate('facebook', {
-    successRedirect: '/',
-    failureRedirect: '/failure'
-  })
+    failureRedirect: '/sign-in',
+    session: false
+  }),
+  async (req, res, next) => {
+    const { user } = req || {};
+
+    try {
+      await fetch('http://localhost:5470/api/users/facebook', {
+        method: 'post',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({ user })
+      });
+
+      res.redirect('/');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('ERROR');
+    }
+  }
 );
 
 app.listen(SIGN_IN_PORT, () => {
