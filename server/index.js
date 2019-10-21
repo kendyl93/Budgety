@@ -1,9 +1,10 @@
 import { db_connect } from './db';
-import { BACKEND_PORT } from './environment';
+import { BACKEND_PORT, COOKIE_SECRET } from './environment';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { v4 as uuid } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 const todoRoutes = express.Router();
 const Todo = require('./Todo');
@@ -34,25 +35,41 @@ userRoutes.route('/facebook').post(async (req, res) => {
     user: { name, facebookId }
   } = req.body;
 
-  try {
-    const userExist = await User.findOne({ facebookId });
+  // 1. Get the token from cookie
+  // 2. Widthraw userId from the token and find the user in DB.
+  // 3. Send the user to client
 
-    if (!userExist) {
-      const id = uuid();
-      const user = new User({ _id: id, name, facebookId });
-      await user.save();
+  // try {
+  //   const userExist = await User.findOne({ facebookId });
 
-      //set cookie here - JWT TOKEN ?
+  //   if (!userExist) {
+  //   const id = uuid();
+  //   const user = new User({ _id: id, name, facebookId });
+  //   await user.save();
 
-      res.redirect('/');
-    }
+  //   const now = new Date();
+  //   const weekInMiliseconds = 7 * 24 * 60 * 60 * 1000;
+  //   const expires = now + weekInMiliseconds;
 
-    console.log('User already exist');
-    res.redirect('/');
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(404);
-  }
+  //   const payload = {
+  //     userId: id,
+  //     expires
+  //   };
+
+  //   const token = jwt.sign(JSON.stringify(payload), COOKIE_SECRET);
+  //   console.log('@@@@@@@@@@@@');
+  //   console.log({ token });
+  //   console.log('@@@@@@@@@@@@');
+
+  //   res.cookie('token', 'token');
+  //   // }
+
+  //   // console.log('User already exist');
+  //   res.redirect('/');
+  // } catch (error) {
+  //   console.error(error);
+  //   res.sendStatus(404);
+  // }
 });
 
 ///////////////////////////////

@@ -22,7 +22,6 @@ console.log({
 
 const app = express();
 app.use(cors());
-
 const userRoutes = express.Router();
 
 app.use('/api/users', userRoutes);
@@ -59,11 +58,15 @@ app.get(
     const { user } = req || {};
 
     try {
-      await fetch('http://localhost:5470/api/users/facebook', {
-        method: 'post',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ user })
-      });
+      // await fetch('http://localhost:5470/api/users/facebook', {
+      //   method: 'post',
+      //   headers: { 'Content-type': 'application/json' },
+      //   body: JSON.stringify({ user })
+      // });
+
+      // 1. connect to db
+      // 2. Chech if user exist and/or save it to db. Generate and save(as a cookie) also the token with userId(uuid)
+      // 3. You can get the token on the server side
 
       res.redirect('/');
     } catch (error) {
