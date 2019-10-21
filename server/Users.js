@@ -9,9 +9,6 @@ const User = new Schema({
   facebookId: {
     type: String
   },
-  email: {
-    type: String
-  },
   name: {
     type: String
   }

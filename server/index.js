@@ -3,6 +3,7 @@ import { BACKEND_PORT } from './environment';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { v4 as uuid } from 'uuid';
 
 const todoRoutes = express.Router();
 const Todo = require('./Todo');
@@ -30,17 +31,18 @@ userRoutes.route('/').get((req, res) => {
 
 userRoutes.route('/facebook').post(async (req, res) => {
   const {
-    user: { _id: id }
+    user: { name, facebookId }
   } = req.body;
 
   try {
-    const userExist = await User.find({ _id: id });
+    const userExist = await User.findOne({ facebookId });
 
     if (!userExist) {
-      const user = new User(req.body);
-
-      console.log({ user });
+      const id = uuid();
+      const user = new User({ _id: id, name, facebookId });
       await user.save();
+
+      //set cookie here - JWT TOKEN ?
 
       res.redirect('/');
     }
