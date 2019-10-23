@@ -3,12 +3,15 @@ import cors from 'cors';
 import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
 import {
+  COOKIE_SECRET,
   FACEBOOK_CALLBACK,
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
   SIGN_IN_PORT,
   SIGN_IN_FACEBOOK_CALLBACK
 } from './environment';
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
 
 console.log('SIGN IN server');
@@ -22,6 +25,7 @@ console.log({
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 const userRoutes = express.Router();
 
 app.use('/api/users', userRoutes);
@@ -55,24 +59,28 @@ app.get(
     session: false
   }),
   async (req, res, next) => {
-    const { user } = req || {};
+    const {
+      user: { facebookId, name }
+    } = req || {};
 
-    try {
-      // await fetch('http://localhost:5470/api/users/facebook', {
-      //   method: 'post',
-      //   headers: { 'Content-type': 'application/json' },
-      //   body: JSON.stringify({ user })
-      // });
+    console.log({ facebookId });
 
-      // 1. connect to db
-      // 2. Chech if user exist and/or save it to db. Generate and save(as a cookie) also the token with userId(uuid)
-      // 3. You can get the token on the server side
+    const now = new Date().valueOf();
+    const weekInMiliseconds = 7 * 24 * 60 * 60 * 1000;
+    const expires = new Date(now + weekInMiliseconds);
 
-      res.redirect('/');
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('ERROR');
-    }
+    const payload = {
+      facebookId,
+      name,
+      expires
+    };
+
+    const token = jwt.sign(JSON.stringify(payload), COOKIE_SECRET);
+    console.log('@@@@@@@@@@@@');
+    console.log({ token });
+    res.cookie('access_token', token);
+
+    res.redirect(`http://localhost:5470/api/users/facebook/${token}`);
   }
 );
 

@@ -30,46 +30,31 @@ userRoutes.route('/').get((req, res) => {
   });
 });
 
-userRoutes.route('/facebook').post(async (req, res) => {
+userRoutes.route('/facebook/:token').get(async (req, res, next) => {
   const {
-    user: { name, facebookId }
-  } = req.body;
+    params: { token = '' }
+  } = req;
 
-  // 1. Get the token from cookie
-  // 2. Widthraw userId from the token and find the user in DB.
-  // 3. Send the user to client
+  const { facebookId, name } = jwt.verify(token, COOKIE_SECRET);
+  try {
+    const userExist = await User.findOne({ facebookId });
 
-  // try {
-  //   const userExist = await User.findOne({ facebookId });
+    if (!userExist) {
+      const id = uuid();
+      const user = new User({ _id: id, name, facebookId });
+      await user.save();
+      console.log('@@@@@@@@@@@@');
+      console.log('User saved');
+      console.log('@@@@@@@@@@@@');
+      return res.json(user);
+    }
 
-  //   if (!userExist) {
-  //   const id = uuid();
-  //   const user = new User({ _id: id, name, facebookId });
-  //   await user.save();
-
-  //   const now = new Date();
-  //   const weekInMiliseconds = 7 * 24 * 60 * 60 * 1000;
-  //   const expires = now + weekInMiliseconds;
-
-  //   const payload = {
-  //     userId: id,
-  //     expires
-  //   };
-
-  //   const token = jwt.sign(JSON.stringify(payload), COOKIE_SECRET);
-  //   console.log('@@@@@@@@@@@@');
-  //   console.log({ token });
-  //   console.log('@@@@@@@@@@@@');
-
-  //   res.cookie('token', 'token');
-  //   // }
-
-  //   // console.log('User already exist');
-  //   res.redirect('/');
-  // } catch (error) {
-  //   console.error(error);
-  //   res.sendStatus(404);
-  // }
+    console.log('User already exist');
+    res.json(userExist);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 ///////////////////////////////

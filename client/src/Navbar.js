@@ -18,6 +18,11 @@ const Navbar = () => (
             Create
           </Link>
         </li>
+        <li className="navbar-item">
+          <Link className="nav-link" to="/login">
+            Sign in
+          </Link>
+        </li>
       </ul>
     </div>
   </nav>
