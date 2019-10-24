@@ -9,7 +9,8 @@ import {
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
   SIGN_IN_PORT,
-  SIGN_IN_FACEBOOK_CALLBACK
+  SIGN_IN_FACEBOOK_CALLBACK,
+  DB_URI
 } from './environment';
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
@@ -51,23 +52,6 @@ passport.use(
   )
 );
 
-app.get('/abc', async (req, res) => {
-  const dbClient = createClient('mongodb://localhost:27017');
-
-  console.log('Connecting to organizations database server...');
-  await dbClient.connect();
-  console.log('Organizations database server connected!');
-
-  const database = dbClient.db('budgety');
-
-  const users = await database
-    .collection('users')
-    .find({})
-    .toArray();
-
-  res.send(users);
-});
-
 app.get('/sign-in', passport.authenticate('facebook'));
 
 app.get(
@@ -81,7 +65,28 @@ app.get(
       user: { facebookId, name }
     } = req || {};
 
-    console.log({ facebookId });
+    const dbClient = createClient(DB_URI);
+
+    console.log('Connecting to users database server...');
+    await dbClient.connect();
+    console.log('Users database server connected!');
+
+    const database = dbClient.db('budgety');
+    const userExist = await database
+      .collection('users')
+      .findOne({ facebookId });
+
+    console.log({ userExist });
+
+    // if (!userExist) {
+    //   const id = uuid();
+    //   const user = new User({ _id: id, name, facebookId });
+    //   await user.save();
+    //   console.log('@@@@@@@@@@@@');
+    //   console.log('User saved');
+    //   console.log('@@@@@@@@@@@@');
+    //   return res.json(user);
+    // }
 
     const now = new Date().valueOf();
     const weekInMiliseconds = 7 * 24 * 60 * 60 * 1000;
@@ -98,7 +103,7 @@ app.get(
     console.log({ token });
     res.cookie('access_token', token);
 
-    res.redirect(`http://localhost:5470/api/users/facebook/${token}`);
+    res.redirect('/');
   }
 );
 

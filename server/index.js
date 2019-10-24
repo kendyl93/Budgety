@@ -30,27 +30,12 @@ userRoutes.route('/').get((req, res) => {
   });
 });
 
-userRoutes.route('/facebook/:token').get(async (req, res, next) => {
-  const {
-    params: { token = '' }
-  } = req;
-
-  const { facebookId, name } = jwt.verify(token, COOKIE_SECRET);
+userRoutes.route('/add').post(async (req, res, next) => {
+  // 1. get info from token
+  // 2. add user with token info
+  // 3. redirect to / as this operation is done
   try {
-    const userExist = await User.findOne({ facebookId });
-
-    if (!userExist) {
-      const id = uuid();
-      const user = new User({ _id: id, name, facebookId });
-      await user.save();
-      console.log('@@@@@@@@@@@@');
-      console.log('User saved');
-      console.log('@@@@@@@@@@@@');
-      return res.json(user);
-    }
-
-    console.log('User already exist');
-    res.json(userExist);
+    console.log('add user');
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
