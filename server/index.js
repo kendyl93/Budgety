@@ -1,5 +1,6 @@
 import { db_connect } from './db';
 import { BACKEND_PORT, COOKIE_SECRET } from './environment';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -15,6 +16,7 @@ const User = require('./Users');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use('/api/todos', todoRoutes);
 app.use('/api/users', userRoutes);
 
@@ -28,6 +30,23 @@ userRoutes.route('/').get((req, res) => {
       res.json(users);
     }
   });
+});
+
+userRoutes.route('/current').get(async (req, res) => {
+  const accessTokenCookie = req.cookies && req.cookies.access_token;
+  const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+
+  try {
+    const user = await User.findOne({ facebookId });
+    if (user) {
+      res.json(user);
+    } else {
+      throw new Error('User is not logged in!');
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 userRoutes.route('/add').post(async (req, res, next) => {
