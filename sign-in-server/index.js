@@ -1,4 +1,5 @@
 import express from 'express';
+import { createClient } from './db';
 import cors from 'cors';
 import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
@@ -49,6 +50,23 @@ passport.use(
     }
   )
 );
+
+app.get('/abc', async (req, res) => {
+  const dbClient = createClient('mongodb://localhost:27017');
+
+  console.log('Connecting to organizations database server...');
+  await dbClient.connect();
+  console.log('Organizations database server connected!');
+
+  const database = dbClient.db('budgety');
+
+  const users = await database
+    .collection('users')
+    .find({})
+    .toArray();
+
+  res.send(users);
+});
 
 app.get('/sign-in', passport.authenticate('facebook'));
 
