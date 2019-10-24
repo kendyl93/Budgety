@@ -61,9 +61,7 @@ app.get(
     session: false
   }),
   async (req, res, next) => {
-    const {
-      user: { facebookId, name }
-    } = req || {};
+    const { user } = req || {};
 
     const dbClient = createClient(DB_URI);
 
@@ -72,21 +70,26 @@ app.get(
     console.log('Users database server connected!');
 
     const database = dbClient.db('budgety');
+
+    const { facebookId, name } = user;
     const userExist = await database
       .collection('users')
       .findOne({ facebookId });
 
-    console.log({ userExist });
-
-    // if (!userExist) {
-    //   const id = uuid();
-    //   const user = new User({ _id: id, name, facebookId });
-    //   await user.save();
-    //   console.log('@@@@@@@@@@@@');
-    //   console.log('User saved');
-    //   console.log('@@@@@@@@@@@@');
-    //   return res.json(user);
-    // }
+    try {
+      if (!userExist) {
+        await fetch('http://localhost:5470/api/users/add', {
+          method: 'POST',
+          body: JSON.stringify({ user }),
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+    }
 
     const now = new Date().valueOf();
     const weekInMiliseconds = 7 * 24 * 60 * 60 * 1000;
@@ -99,8 +102,6 @@ app.get(
     };
 
     const token = jwt.sign(JSON.stringify(payload), COOKIE_SECRET);
-    console.log('@@@@@@@@@@@@');
-    console.log({ token });
     res.cookie('access_token', token);
 
     res.redirect('/');

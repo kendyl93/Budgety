@@ -21,7 +21,7 @@ const App = () => {
   return (
     <Router>
       <div className="container-fluid">
-        <h1>Hello, {users && users[0].name}</h1>
+        <h1>Hello, {users && users[0] && users[0].name}</h1>
         <Navbar />
         <Main />
       </div>

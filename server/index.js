@@ -31,15 +31,26 @@ userRoutes.route('/').get((req, res) => {
 });
 
 userRoutes.route('/add').post(async (req, res, next) => {
-  // 1. get info from token
-  // 2. add user with token info
-  // 3. redirect to / as this operation is done
+  const { body } = req;
+
+  const { user: { name = '', facebookId = '' } = {} } = body;
+
+  console.log({ name });
+
   try {
-    console.log('add user');
+    if (name) {
+      const id = uuid();
+      const user = new User({ _id: id, name, facebookId });
+      await user.save();
+    } else {
+      throw new Error('User must have at least a name!');
+    }
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
   }
+
+  res.sendStatus(200);
 });
 
 ///////////////////////////////
