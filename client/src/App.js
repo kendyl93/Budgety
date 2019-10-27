@@ -8,11 +8,11 @@ import Navbar from './Navbar';
 import Main from './Main';
 
 const App = () => {
-  const [users, setUsers] = useState();
+  const [currentUser, setCurrentUser] = useState();
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('http://localhost:5470/api/users');
-      setUsers(result.data);
+      const result = await axios.get('http://localhost:5470/api/users/current');
+      setCurrentUser(result.data);
       console.log({ result });
     };
     fetchData();
@@ -21,7 +21,7 @@ const App = () => {
   return (
     <Router>
       <div className="container-fluid">
-        <h1>Hello, {users && users[0] && users[0].name}</h1>
+        <h1>Hello, {currentUser && currentUser.name}</h1>
         <Navbar />
         <Main />
       </div>
