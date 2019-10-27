@@ -11,9 +11,16 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState();
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('http://localhost:5470/api/users/current');
-      setCurrentUser(result.data);
-      console.log({ result });
+      try {
+        const result = await axios.get(
+          'http://localhost:5470/api/users/current'
+        );
+
+        setCurrentUser(result.data);
+        console.log({ result });
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchData();
   }, []);

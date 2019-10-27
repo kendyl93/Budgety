@@ -17,6 +17,18 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  console.log('@@@@@@@@@@@@@@@@@@@@@');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested With, Content-Type, Accept'
+  );
+  res.redirect('http://localhost:3000/login');
+});
+
 app.use('/api/todos', todoRoutes);
 app.use('/api/users', userRoutes);
 
@@ -34,18 +46,21 @@ userRoutes.route('/').get((req, res) => {
 
 userRoutes.route('/current').get(async (req, res) => {
   const accessTokenCookie = req.cookies && req.cookies.access_token;
-  const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
 
-  try {
-    const user = await User.findOne({ facebookId });
-    if (user) {
-      res.json(user);
-    } else {
-      throw new Error('User is not logged in!');
+  if (accessTokenCookie) {
+    const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+
+    try {
+      const user = await User.findOne({ facebookId });
+      if (user) {
+        res.json(user);
+      } else {
+        throw new Error('User is not logged in!');
+      }
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
     }
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
   }
 });
 
