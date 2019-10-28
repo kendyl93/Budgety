@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SignIn = () => (
+const App = () => (
   <div>
     <h1>Sign in</h1>
     <h5>In order to use the app, please sign in.</h5>
@@ -9,4 +9,4 @@ const SignIn = () => (
   </div>
 );
 
-export default SignIn;
+export default App;

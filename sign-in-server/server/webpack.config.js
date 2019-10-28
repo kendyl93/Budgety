@@ -1,9 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { parsed: env } = require('dotenv').config({
-  path: path.join(__dirname, '../.development.env')
-});
 
 module.exports = {
   entry: {
@@ -11,10 +8,26 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: '[chunkhash].bundle.js'
   },
-  mode: 'development',
   devServer: { compress: true, port: 8000, contentBase: './dist' },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 0,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
   module: {
     rules: [
       {
@@ -54,10 +67,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      ENVIRONMENT: `<script>window.process = { env: ${JSON.stringify(
-        env
-      )} };</script>`,
-      template: './index.ejs'
+      filename: 'index.ejs',
+      template: './index.html'
     }),
     new MiniCssExtractPlugin({
       filename: 'main.css'
