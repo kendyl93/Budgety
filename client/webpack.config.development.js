@@ -14,7 +14,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   mode: 'development',
-  devServer: { compress: true, port: 8000, contentBase: './dist' },
+  devServer: { compress: true, port: 3000, contentBase: './dist' },
   module: {
     rules: [
       {

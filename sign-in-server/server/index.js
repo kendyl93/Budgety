@@ -1,12 +1,12 @@
 import express from 'express';
 import fs from 'fs';
 
-const { CLIENT_PORT, NODE_ENV, HOST_URI } = process.env;
+const { SIGN_IN_STATIC_PORT, NODE_ENV, HOST_URI } = process.env;
 
 console.log('STATIC-SERVER:');
-console.log({ CLIENT_PORT, NODE_ENV, HOST_URI });
+console.log({ SIGN_IN_STATIC_PORT, NODE_ENV, HOST_URI });
 
-const config = { CLIENT_PORT: 8000, NODE_ENV, HOST_URI };
+const config = { SIGN_IN_STATIC_PORT, NODE_ENV, HOST_URI };
 
 const app = express();
 app.use(express.static('./dist'));
@@ -25,6 +25,8 @@ app.get('*', (_, res) => {
   res.send(200, body);
 });
 
-app.listen(CLIENT_PORT, () => {
-  console.log('Client static server is running on Port: ' + CLIENT_PORT);
+app.listen(SIGN_IN_STATIC_PORT, () => {
+  console.log(
+    'Sign in static server is running on Port: ' + SIGN_IN_STATIC_PORT
+  );
 });
