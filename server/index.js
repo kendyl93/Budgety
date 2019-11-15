@@ -52,30 +52,71 @@ app.get(
 app.get(
   '/api/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/', session: false }),
-  (req, res) => {
-    const { token } = req.user;
-    res.redirect('http://localhost:5470?token=' + token);
+
+  async (req, res) => {
+    // const accessTokenCookie = req.cookies && req.cookies.access_token;
+
+    // console.log({ accessTokenCookie });
+    // if (accessTokenCookie) {
+    //   const { email } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+    //   try {
+    //     const user = await User.findOne({ email });
+    //     if (user) {
+    //       res.cookie('jwt', token);
+    //     } else {
+    //       throw new Error('User is not logged in!');
+    //     }
+    //   } catch (error) {
+    //     console.error(error);
+    //     return res.sendStatus(500);
+    //   }
+    // }
+    // res.cookie('jwt', token);
+    const { token, email, name } = req.user;
+    const signedToken = jwt.sign(JSON.stringify(token), COOKIE_SECRET);
+
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        const user = new User({ _id: uuid(), name, email });
+
+        user
+          .save()
+          .then(() => {
+            res.status(200).json({ todo: 'User added successfully' });
+          })
+          .catch(() => {
+            res.status(400).send('adding new user failed');
+          });
+      }
+      res.cookie('access_token', signedToken);
+    } catch (error) {
+      console.error(error);
+      return res.sendStatus(500);
+    }
+
+    res.redirect('http://localhost:5470?token=' + signedToken);
   }
 );
 
 // app.use('/', async (req, res, next) => {
-//   const accessTokenCookie = req.cookies && req.cookies.access_token;
-//   console.log({ accessTokenCookie });
-//   if (accessTokenCookie) {
-//     const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-//     try {
-//       const user = await User.findOne({ facebookId });
-//       if (user) {
-//         res.json(user);
-//         next();
-//       } else {
-//         throw new Error('User is not logged in!');
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       return res.sendStatus(500);
+// const accessTokenCookie = req.cookies && req.cookies.access_token;
+// console.log({ accessTokenCookie });
+// if (accessTokenCookie) {
+//   const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+//   try {
+//     const user = await User.findOne({ facebookId });
+//     if (user) {
+//       res.json(user);
+//       next();
+//     } else {
+//       throw new Error('User is not logged in!');
 //     }
+//   } catch (error) {
+//     console.error(error);
+//     return res.sendStatus(500);
 //   }
+// }
 // });
 
 app.use('/api/todos', todoRoutes);
