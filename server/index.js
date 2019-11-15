@@ -1,11 +1,18 @@
 import { db_connect } from './db';
-import { BACKEND_PORT, COOKIE_SECRET } from './environment';
+import {
+  BACKEND_PORT,
+  COOKIE_SECRET,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET
+} from './environment';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const todoRoutes = express.Router();
 const Todo = require('./Todo');
@@ -18,27 +25,58 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.route('/api').get(async (req, res) => {
-  const accessTokenCookie = req.cookies && req.cookies.access_token;
-
-  if (accessTokenCookie) {
-    const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-
-    try {
-      const user = await User.findOne({ facebookId });
-      if (user) {
-        return res.json(user);
-      } else {
-        throw new Error('User is not logged in!');
-      }
-    } catch (error) {
-      console.error(error);
-      return res.sendStatus(500);
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: 'http://localhost:5470/api/auth/google/callback'
+    },
+    (accessToken, refreshToken, profile, done) => {
+      const userData = {
+        email: profile.emails[0].value,
+        name: profile.displayName,
+        token: accessToken
+      };
+      console.log({ userData });
+      done(null, userData);
     }
-  }
+  )
+);
 
-  return res.sendStatus(500);
-});
+app.get(
+  '/api/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get(
+  '/api/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/', session: false }),
+  (req, res) => {
+    const { token } = req.user;
+    res.redirect('http://localhost:5470?token=' + token);
+  }
+);
+
+// app.use('/', async (req, res, next) => {
+//   const accessTokenCookie = req.cookies && req.cookies.access_token;
+//   console.log({ accessTokenCookie });
+//   if (accessTokenCookie) {
+//     const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+//     try {
+//       const user = await User.findOne({ facebookId });
+//       if (user) {
+//         res.json(user);
+//         next();
+//       } else {
+//         throw new Error('User is not logged in!');
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       return res.sendStatus(500);
+//     }
+//   }
+// });
 
 app.use('/api/todos', todoRoutes);
 app.use('/api/users', userRoutes);

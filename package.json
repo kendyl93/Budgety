@@ -7,18 +7,14 @@
   "scripts": {
     "check": "prettier \"**/*.js\" --check",
     "client": "cd client && npm start",
-    "start": "concurrently \"kill-all\" \"npm run reverse-proxy\" \"npm run server\" \"npm run sign-in-server\" \"npm run sign-in-static-server\" \"npm run client\"",
+    "start": "concurrently \"kill-all\" \"npm run reverse-proxy\" \"npm run server\" \"npm run client\"",
     "fix": "eslint --fix \"**/*.js\"",
     "kill-all": "kilall node",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
-    "install-sign-in-server": "cd sign-in-server && npm install",
-    "install-sign-in-static-server": "cd sign-in-server/server && npm install",
     "install-reverse-proxy": "cd server && npm install",
-    "postinstall": "concurrently \"npm run install-reverse-proxy\" \"npm run install-sign-in-server\" \"npm run install-server\" \"npm run install-client\"",
+    "postinstall": "concurrently \"npm run install-reverse-proxy\" \"npm run install-server\" \"npm run install-client\"",
     "server": "cd server && npm run start",
-    "sign-in-server": "cd sign-in-server && npm run start",
-    "sign-in-static-server": "cd sign-in-server/server && npm run start",
     "reverse-proxy": "cd reverse-proxy && npm run start"
   },
   "husky": {
