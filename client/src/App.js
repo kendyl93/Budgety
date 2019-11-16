@@ -29,7 +29,7 @@ const App = () => {
   return (
     <Router history={history}>
       <div className="container-fluid">
-        <a className="button" href="/auth/google">
+        <a className="button" href="api/auth/google">
           <div>
             <span className="svgIcon t-popup-svg">
               <svg

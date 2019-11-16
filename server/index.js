@@ -51,29 +51,13 @@ app.get(
 
 app.get(
   '/api/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/', session: false }),
+  passport.authenticate('google', {
+    failureRedirect: '/login_od_google',
+    session: false
+  }),
 
-  async (req, res) => {
-    // const accessTokenCookie = req.cookies && req.cookies.access_token;
-
-    // console.log({ accessTokenCookie });
-    // if (accessTokenCookie) {
-    //   const { email } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-    //   try {
-    //     const user = await User.findOne({ email });
-    //     if (user) {
-    //       res.cookie('jwt', token);
-    //     } else {
-    //       throw new Error('User is not logged in!');
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //     return res.sendStatus(500);
-    //   }
-    // }
-    // res.cookie('jwt', token);
+  async (req, res, next) => {
     const { token, email, name } = req.user;
-    const signedToken = jwt.sign(JSON.stringify(token), COOKIE_SECRET);
 
     try {
       const user = await User.findOne({ email });
@@ -89,34 +73,67 @@ app.get(
             res.status(400).send('adding new user failed');
           });
       }
+      console.log({ user });
+      const signedToken = jwt.sign(
+        JSON.stringify({ email, name }),
+        COOKIE_SECRET
+      );
       res.cookie('access_token', signedToken);
+      next();
     } catch (error) {
       console.error(error);
       return res.sendStatus(500);
     }
-
-    res.redirect('http://localhost:5470?token=' + signedToken);
   }
 );
 
-// app.use('/', async (req, res, next) => {
-// const accessTokenCookie = req.cookies && req.cookies.access_token;
-// console.log({ accessTokenCookie });
-// if (accessTokenCookie) {
-//   const { facebookId } = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-//   try {
-//     const user = await User.findOne({ facebookId });
-//     if (user) {
-//       res.json(user);
-//       next();
-//     } else {
-//       throw new Error('User is not logged in!');
+app.use('/', async (req, res) => {
+  const accessTokenCookie = req.cookies && req.cookies.access_token;
+
+  console.log({ accessTokenCookie });
+  console.log('@@@@');
+  if (accessTokenCookie) {
+    const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+    console.log({ TOKEN_signedornot });
+
+    if (TOKEN_signedornot) {
+      // console.log({ parsedInside: TOKEN_signedornot });
+      // const tokkken = jwt.verify(parsed, COOKIE_SECRET);
+      // console.log({ tokkken });
+
+      // const user = await User.findOne({ tokkken });
+
+      // if (!user) {
+      //   console.error('USER DOED NOT EXISTS');
+      //   throw Error('User does not exists!');
+      // }
+
+      return res.redirect('http://localhost:5470/');
+    }
+  }
+
+  return res.redirect('http://localhost:5470/login');
+});
+
+// app.use('/api/sign-in', async (req, res) => {
+//   console.log('I AM IN SIGN ININININININ');
+//   const {
+//     query: { token }
+//   } = req;
+
+//   console.log({ token });
+//   if (token) {
+//     const { email } = jwt.verify(token, COOKIE_SECRET);
+
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       console.error('USER DOED NOT EXISTS');
+//       throw Error('User does not exists!');
 //     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.sendStatus(500);
+
+//     return res.redirect('http://localhost:5470/');
 //   }
-// }
 // });
 
 app.use('/api/todos', todoRoutes);
