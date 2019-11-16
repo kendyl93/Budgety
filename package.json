@@ -12,7 +12,7 @@
     "kill-all": "kilall node",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
-    "install-reverse-proxy": "cd server && npm install",
+    "install-reverse-proxy": "cd reverse-proxy && npm install",
     "postinstall": "concurrently \"npm run install-reverse-proxy\" \"npm run install-server\" \"npm run install-client\"",
     "server": "cd server && npm run start",
     "reverse-proxy": "cd reverse-proxy && npm run start"

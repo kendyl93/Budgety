@@ -79,7 +79,7 @@ app.get(
         COOKIE_SECRET
       );
       res.cookie('access_token', signedToken);
-      next();
+      return res.redirect('http://localhost:5470/');
     } catch (error) {
       console.error(error);
       return res.sendStatus(500);
@@ -88,53 +88,19 @@ app.get(
 );
 
 app.use('/', async (req, res) => {
-  const accessTokenCookie = req.cookies && req.cookies.access_token;
+  const accessTokenCookie = req.cookies && req.cookies['access_token'];
+  console.log({ FIRST: accessTokenCookie, OR: req.cookies });
+  if (!accessTokenCookie) {
+    return res.sendStatus(500);
+  }
+  const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
 
-  console.log({ accessTokenCookie });
-  console.log('@@@@');
-  if (accessTokenCookie) {
-    const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-    console.log({ TOKEN_signedornot });
-
-    if (TOKEN_signedornot) {
-      // console.log({ parsedInside: TOKEN_signedornot });
-      // const tokkken = jwt.verify(parsed, COOKIE_SECRET);
-      // console.log({ tokkken });
-
-      // const user = await User.findOne({ tokkken });
-
-      // if (!user) {
-      //   console.error('USER DOED NOT EXISTS');
-      //   throw Error('User does not exists!');
-      // }
-
-      return res.redirect('http://localhost:5470/');
-    }
+  if (!TOKEN_signedornot) {
+    return res.sendStatus(500);
   }
 
-  return res.redirect('http://localhost:5470/login');
+  return res.sendStatus(200);
 });
-
-// app.use('/api/sign-in', async (req, res) => {
-//   console.log('I AM IN SIGN ININININININ');
-//   const {
-//     query: { token }
-//   } = req;
-
-//   console.log({ token });
-//   if (token) {
-//     const { email } = jwt.verify(token, COOKIE_SECRET);
-
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       console.error('USER DOED NOT EXISTS');
-//       throw Error('User does not exists!');
-//     }
-
-//     return res.redirect('http://localhost:5470/');
-//   }
-// });
 
 app.use('/api/todos', todoRoutes);
 app.use('/api/users', userRoutes);

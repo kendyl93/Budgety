@@ -63,7 +63,7 @@ const Todos = () => {
             <th>Action</th>
           </tr>
         </thead>
-        {/* <tbody>{todos && todos.length > 0 && todoList(todos)}</tbody> */}
+        <tbody>{todos && todos.length > 0 && todoList(todos)}</tbody>
       </table>
     </div>
   );
