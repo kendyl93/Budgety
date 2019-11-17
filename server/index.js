@@ -99,7 +99,7 @@ app.use('/', async (req, res) => {
     return res.sendStatus(500);
   }
 
-  return res.sendStatus(200);
+  return res.status(200).send({ name: TOKEN_signedornot.name });
 });
 
 app.use('/api/todos', todoRoutes);

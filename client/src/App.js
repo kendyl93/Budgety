@@ -14,7 +14,7 @@ const App = () => {
       try {
         const result = await axios.get('http://localhost:5470/api');
         setCurrentUser(result.data);
-        console.log({ result });
+        console.log({ result: result.data });
       } catch (error) {
         console.error(error);
         history.push('/login');
