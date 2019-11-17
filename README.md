@@ -37,21 +37,27 @@ App was deployed and store in Heroku.
 
 1. Deploying automation
 2. Optimize wepback production config file
+3. Many more features...
 
 ### Deploy Server (AWS)
 
+0. Make sure to update the `.env` file if needed.
 1. Install deps `npm install`
-2. Restart [pm2](http://pm2.keymetrics.io/docs/usage/quick-start/) process `pm2 start npm --name "backend" -- run start:production`
+1. Restart [pm2](http://pm2.keymetrics.io/docs/usage/quick-start/) process `pm2 start npm --name "backend" -- run start:production`
 
 ### Deploy Client (AWS)
 
+0. Make sure to update the `.env` file if needed.
+1. Build the project with `npm run build`
 1. Make sure you are in `dist` dir.
-2. Transfer files `scp -i ~/.ssh/sshFileName.pem * userName@hostName:~/dirName`
+1. Transfer files existnig in dist `scp -i ~/.ssh/sshFileName.pem * userName@hostName:~/dirName`
+1. Transfer also the `static-server.js`(the way as server).
 
-#### Deploying client-server (Heroku)
+##### Deploying client-server (Heroku) - not supported any more
 
+0. Make sure to update the `.env` file if needed.
 1. Check `.env` variables on client side
-2. Build client `npm run build` make sure you are in the client directory
-3. Copy builded files to `public` direactory on server and commit changes
-4. Push changes to heroku master `git push heroku master`
-5. Revert `.env` variables on the client side if needed
+1. Build client `npm run build` make sure you are in the client directory
+1. Copy builded files to `public` direactory on server and commit changes
+1. Push changes to heroku master `git push heroku master`
+1. Revert `.env` variables on the client side if needed
