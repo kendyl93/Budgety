@@ -18,6 +18,7 @@ Backend:
 - NodeJS
 - Express
 - Mongoose
+- JWT tokens - to sign data stored in cookie. This ensures me that the data comes from my server.
 
 Database:
 
@@ -28,6 +29,7 @@ Frontend:
 - React
 - Webpack
 - Jest
+- SASS
 
 App was deployed and store in Heroku.
 
