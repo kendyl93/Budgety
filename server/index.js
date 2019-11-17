@@ -1,9 +1,12 @@
 import { db_connect } from './db';
 import {
+  NODE_ENV,
   BACKEND_PORT,
   COOKIE_SECRET,
   GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET
+  GOOGLE_CLIENT_SECRET,
+  REVERSE_PROXY_PORT,
+  HOST_URI
 } from './environment';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -25,12 +28,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
+console.log({ NODE_ENV, HOST_URI });
+console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
+const FULL_HOST_URI =
+  NODE_ENV === 'production'
+    ? `http://${HOST_URI}`
+    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:5470/api/auth/google/callback'
+      callbackURL: `${FULL_HOST_URI}/api/auth/google/callback`
     },
     (accessToken, refreshToken, profile, done) => {
       const userData = {
@@ -57,7 +69,7 @@ app.get(
   }),
 
   async (req, res, next) => {
-    const { token, email, name } = req.user;
+    const { email, name } = req.user;
 
     try {
       const user = await User.findOne({ email });
@@ -79,7 +91,7 @@ app.get(
         COOKIE_SECRET
       );
       res.cookie('access_token', signedToken);
-      return res.redirect('http://localhost:5470/');
+      return res.redirect(FULL_HOST_URI);
     } catch (error) {
       console.error(error);
       return res.sendStatus(500);
