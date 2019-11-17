@@ -1,0 +1,42 @@
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.google-button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  max-width: 300px;
+  border: 0;
+  padding: 0 18px;
+  width: 100%;
+  height: 37px;
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.84) !important;
+  fill: rgba(0, 0, 0, 0.84) !important;
+  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.5);
+}
+
+.button {
+  &:hover {
+    text-decoration: none;
+
+    .button-label {
+      color: blue;
+    }
+  }
+
+  .svgIcon {
+    vertical-align: middle;
+    fill: rgba(0, 0, 0, 0.54);
+    padding-right: 4px;
+    height: 37px;
+  }
+}
