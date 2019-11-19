@@ -1,18 +1,46 @@
 import React from 'react';
-import Link from './UI/Link';
 
-const Navbar = () => (
+import Link from './UI/Link';
+import {
+  Home as DashboardIcon,
+  MoneyOff as ExpencesIcon,
+  AttachMoney as IncomesIcon,
+  SettingsApplication as SettingsIcon
+} from './UI/icons';
+
+const Navbar = ({ currentUser }) => (
   <div className="navbar-container">
     <nav>
-      <Link className="navbar-brand" path="/">
-        Budgety
-      </Link>
-      <div className="links">
-        <Link path="/">Dashboard</Link>
-        <Link path="/expences">Expences</Link>
-        <Link path="/incomes">Incomes</Link>
-        <Link path="/groups">New income</Link>
-        <Link path="/settings">Settings</Link>
+      <Link path="/">Budgety</Link>
+
+      <div>
+        <h1>Hello, {currentUser && currentUser.name}</h1>
+      </div>
+      <div className="links row-spacing-half">
+        <Link path="/">
+          <div className="link col-spacing">
+            <DashboardIcon />
+            <div>Dashboard</div>
+          </div>
+        </Link>
+        <Link path="/expences">
+          <div className="link col-spacing">
+            <ExpencesIcon />
+            <div>Expences</div>
+          </div>
+        </Link>
+        <Link path="/incomes">
+          <div className="link col-spacing">
+            <IncomesIcon />
+            <div>Incomes</div>
+          </div>
+        </Link>
+        <Link path="/settings">
+          <div className="link col-spacing">
+            <SettingsIcon />
+            <div>Settings</div>
+          </div>
+        </Link>
       </div>
     </nav>
   </div>

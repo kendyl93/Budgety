@@ -5,6 +5,7 @@
 
 .navbar-container {
   display: flex;
+  flex-direction: column;
   height: 100%;
   border-right: solid 1px gray;
   min-width: 260px;
@@ -12,15 +13,20 @@
   nav {
     display: flex;
     flex-direction: column;
-    margin: 32px 16px;
+    padding: 32px 16px;
     width: 100%;
 
     .links {
       display: flex;
       flex-direction: column;
 
-      a {
-        width: 100%;
+      .link {
+        display: flex;
+        align-items: center;
+
+        a {
+          width: 100%;
+        }
       }
     }
   }

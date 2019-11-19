@@ -1,5 +1,7 @@
 @import './bootstrap.min';
+@import './Styles.scss';
 @import './login/Login.scss';
+@import './Home/Home.scss';
 
 body {
   margin: 0;
@@ -15,18 +17,24 @@ code {
     monospace;
 }
 
-.completed {
-  text-decoration: line-through;
+a {
+  color: $textColor;
+  font-weight: 500;
+  @include transition;
+
+  &:hover {
+    color: $blue;
+    text-decoration: none;
+
+    svg {
+      fill: $blue;
+    }
+  }
 }
 
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+svg {
+  fill: $textColor;
+  @include transition;
 }
 
 h1 {
@@ -36,20 +44,7 @@ h1 {
     color: lightgray;
   }
 }
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
-.App-link {
-  color: #61dafb;
-}
 img {
   height: 24px;
   width: auto;
