@@ -32,9 +32,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="container-fluid">
-        {currentUser ? <Home currentUser={currentUser} /> : <Login />}
-      </div>
+      <div>{currentUser ? <Home currentUser={currentUser} /> : <Login />}</div>
     </Router>
   );
 };

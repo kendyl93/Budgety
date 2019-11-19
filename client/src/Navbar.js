@@ -1,31 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from './UI/Link';
 
 const Navbar = () => (
-  <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
-    <Link className="navbar-brand" to="/">
-      Budgety
-    </Link>
-    <div className="collpase navbar-collapse">
-      <ul className="navbar-nav mr-auto">
-        <li className="navbar-item">
-          <Link className="nav-link" to="/">
-            Home
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link className="nav-link" to="/create">
-            Create
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link className="nav-link" to="/logout">
-            Log out
-          </Link>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  <div className="navbar-container">
+    <nav>
+      <Link className="navbar-brand" path="/">
+        Budgety
+      </Link>
+      <div className="links">
+        <Link path="/">Dashboard</Link>
+        <Link path="/expences">Expences</Link>
+        <Link path="/incomes">Incomes</Link>
+        <Link path="/groups">New income</Link>
+        <Link path="/settings">Settings</Link>
+      </div>
+    </nav>
+  </div>
 );
 
 export default Navbar;
