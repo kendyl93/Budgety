@@ -48,10 +48,11 @@ App was deployed and store in Heroku.
 ### Deploy Client (AWS)
 
 0. Make sure to update the `.env` file if needed.
-1. Build the project with `npm run build`
-1. Make sure you are in `dist` dir.
-1. Transfer files existnig in dist `scp -i ~/.ssh/sshFileName.pem * userName@hostName:~/dirName`
-1. Transfer also the `static-server.js`(the way as server).
+
+- Build the project with `npm run build`
+- Make sure you are in `dist` dir.
+- Transfer files existnig in dist `scp -i ~/.ssh/sshFileName.pem * userName@hostName:~/dirName`
+- Transfer also the `static-server.js`(the way as server).
 
 ##### Deploying client-server (Heroku) - not supported any more
 

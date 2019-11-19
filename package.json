@@ -7,7 +7,7 @@
   "scripts": {
     "check": "prettier \"**/*.js\" --check",
     "client": "cd client && npm start",
-    "start": "concurrently \"kill-all\" \"npm run reverse-proxy\" \"npm run server\" \"npm run client\"",
+    "start": "concurrently \"npm run reverse-proxy\" \"npm run server\" \"npm run client\"",
     "fix": "eslint --fix \"**/*.js\"",
     "kill-all": "kilall node",
     "install-client": "cd client && npm install",

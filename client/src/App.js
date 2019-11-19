@@ -4,10 +4,8 @@ import axios from 'axios';
 
 import './App.scss';
 
-import Navbar from './Navbar';
-import Main from './Main';
-
 import Login from './login/Login';
+import Home from './Home/Home';
 
 const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env || {};
 
@@ -35,15 +33,7 @@ const App = () => {
   return (
     <Router>
       <div className="container-fluid">
-        {currentUser ? (
-          <div>
-            <h1>Hello, {currentUser && currentUser.name}</h1>
-            <Navbar />
-            <Main />
-          </div>
-        ) : (
-          <Login />
-        )}
+        {currentUser ? <Home currentUser={currentUser} /> : <Login />}
       </div>
     </Router>
   );
