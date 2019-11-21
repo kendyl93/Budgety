@@ -24,7 +24,6 @@ const App = () => {
         console.log({ result: result.data });
       } catch (error) {
         console.error(error);
-        history.push('/login'); //need to be fixed
       }
     };
     fetchData();

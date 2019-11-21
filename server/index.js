@@ -17,8 +17,8 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const todoRoutes = express.Router();
-const Todo = require('./Todo');
+const expencesRoutes = express.Router();
+const Expence = require('./Expences');
 
 const userRoutes = express.Router();
 const User = require('./Users');
@@ -27,10 +27,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
-console.log({ NODE_ENV, HOST_URI });
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
 const FULL_HOST_URI =
   NODE_ENV === 'production'
@@ -79,7 +75,7 @@ app.get(
         user
           .save()
           .then(() => {
-            res.status(200).json({ todo: 'User added successfully' });
+            res.status(200).json({ USER: 'User added successfully' });
           })
           .catch(() => {
             res.status(400).send('adding new user failed');
@@ -99,27 +95,28 @@ app.get(
   }
 );
 
-app.use('/', async (req, res) => {
-  const accessTokenCookie = req.cookies && req.cookies['access_token'];
-  console.log({ FIRST: accessTokenCookie, OR: req.cookies });
+app.all('*', (req, res, next) => {
+  const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
+
   if (!accessTokenCookie) {
-    return res.sendStatus(500);
+    res.redirect('/login');
   }
+
   const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
 
   if (!TOKEN_signedornot) {
-    return res.sendStatus(500);
+    res.redirect('/login');
   }
 
-  return res.status(200).send({ name: TOKEN_signedornot.name });
+  next();
 });
 
-app.use('/api/todos', todoRoutes);
+app.use('/api/expences', expencesRoutes);
 app.use('/api/users', userRoutes);
 
 db_connect();
 
-userRoutes.route('/').get((req, res) => {
+userRoutes.route('/').get((req, res, next) => {
   User.find((err, users) => {
     if (err) {
       console.log(err);
@@ -154,49 +151,46 @@ userRoutes.route('/add').post(async (req, res, next) => {
 
 ///////////////////////////////
 
-todoRoutes.route('/').get((req, res) => {
-  Todo.find((err, todos) => {
+expencesRoutes.route('/').get((req, res) => {
+  Expence.find((err, expences) => {
     if (err) {
       console.log(err);
     } else {
-      res.json(todos);
+      res.json(expences);
     }
   });
 });
 
-todoRoutes.route('/:id').get((req, res) => {
+expencesRoutes.route('/:id').get((req, res) => {
   const {
     params: { id }
   } = req;
 
-  Todo.findById(id, (_, todo) => {
-    res.json(todo);
+  Expence.findById(id, (_, expence) => {
+    res.json(expence);
   });
 });
 
-todoRoutes.route('/:id').put((req, res) => {
+expencesRoutes.route('/:id').put((req, res) => {
   const {
     params: { id }
   } = req;
 
-  Todo.findById(id, (err, todo) => {
-    if (!todo) {
+  Expence.findById(id, (err, expence) => {
+    if (!expence) {
       res.status(404).send('data is not found');
     } else {
       const {
-        body: { description, responsible, priority, completed }
+        body: { amount }
       } = req;
 
-      todo.description = description;
-      todo.responsible = responsible;
-      todo.priority = priority;
-      todo.completed = completed;
+      expence.amount = amount;
     }
 
-    todo
+    expence
       .save()
       .then(() => {
-        res.json('Budget updated!');
+        res.json('Expence updated!');
       })
       .catch(() => {
         res.status(400).send('Update not possible');
@@ -204,16 +198,16 @@ todoRoutes.route('/:id').put((req, res) => {
   });
 });
 
-todoRoutes.route('/:id').delete((req, res) => {
+expencesRoutes.route('/:id').delete((req, res) => {
   const {
     params: { id }
   } = req;
 
-  Todo.findById(id, (_, todo) => {
-    todo
+  Expence.findById(id, (_, expence) => {
+    expence
       .remove()
       .then(() => {
-        res.json('Budget deleted!');
+        res.json('Expence deleted!');
       })
       .catch(() => {
         res.status(400).send('Update not possible');
@@ -221,17 +215,33 @@ todoRoutes.route('/:id').delete((req, res) => {
   });
 });
 
-todoRoutes.route('/add').post((req, res) => {
-  const todo = new Todo(req.body);
+expencesRoutes.route('/add').post((req, res) => {
+  const expence = new Expence(req.body);
 
-  todo
+  expence
     .save()
     .then(() => {
-      res.status(200).json({ todo: 'Budget added successfully' });
+      res.status(200).json({ expence: 'Expence added successfully' });
     })
     .catch(() => {
-      res.status(400).send('adding new todo failed');
+      res.status(400).send('adding new expence failed');
     });
+});
+
+app.use('/', (req, res) => {
+  const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
+
+  if (!accessTokenCookie) {
+    res.redirect('/login');
+  }
+  const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+
+  if (!TOKEN_signedornot) {
+    res.redirect('/login');
+  }
+
+  res.status(200).send({ name: TOKEN_signedornot.name });
+  return res.end();
 });
 
 app.listen(BACKEND_PORT, () => {
