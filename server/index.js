@@ -17,6 +17,30 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+const checkTokenAuthorization = (req, res, next) => {
+  const tokenWithBearer =
+    req.headers['x-access-token'] || req.headers['authorization'];
+
+  if (!tokenWithBearer.startsWith('Bearer ')) {
+    return res.redirect('/login');
+  }
+
+  const token = tokenWithBearer.slice(7, tokenWithBearer.length);
+
+  if (!token) {
+    return res.redirect('/login');
+  }
+
+  jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
+    if (err) {
+      return res.redirect('/login');
+    } else {
+      req.decoded = decoded;
+      next();
+    }
+  });
+};
+
 const expencesRoutes = express.Router();
 const Expence = require('./Expences');
 
@@ -60,7 +84,7 @@ app.get(
 app.get(
   '/api/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/login_od_google',
+    failureRedirect: '/login',
     session: false
   }),
 
@@ -95,32 +119,7 @@ app.get(
   }
 );
 
-app.all('*', (req, res, next) => {
-  const token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
-  if (token.startsWith('Bearer ')) {
-    // Remove Bearer from string
-    token = token.slice(7, token.length);
-  }
-
-  if (token) {
-    jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
-      if (err) {
-        return res.json({
-          success: false,
-          message: 'Token is not valid'
-        });
-      } else {
-        req.decoded = decoded;
-        next();
-      }
-    });
-  } else {
-    return res.json({
-      success: false,
-      message: 'Auth token is not supplied'
-    });
-  }
-});
+app.all('*', checkTokenAuthorization);
 
 app.use('/api/expences', expencesRoutes);
 app.use('/api/users', userRoutes);
