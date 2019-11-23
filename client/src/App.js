@@ -14,12 +14,25 @@ const FULL_HOST_URI =
     ? `http://${HOST_URI}/api`
     : `http://${HOST_URI}:${REVERSE_PROXY_PORT}/api`;
 
+const getCookie = name => {
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
 const App = () => {
   const [currentUser, setCurrentUser] = useState();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get(FULL_HOST_URI);
+        const result = await axios.get(FULL_HOST_URI, {
+          headers: { Authorization: `Bearer ${getCookie('access_token')}` }
+        });
         setCurrentUser(result.data);
         console.log({ result: result.data });
       } catch (error) {

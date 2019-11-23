@@ -96,19 +96,30 @@ app.get(
 );
 
 app.all('*', (req, res, next) => {
-  const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
-
-  if (!accessTokenCookie) {
-    res.redirect('/login');
+  const token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
+  if (token.startsWith('Bearer ')) {
+    // Remove Bearer from string
+    token = token.slice(7, token.length);
   }
 
-  const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
-
-  if (!TOKEN_signedornot) {
-    res.redirect('/login');
+  if (token) {
+    jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
+      if (err) {
+        return res.json({
+          success: false,
+          message: 'Token is not valid'
+        });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return res.json({
+      success: false,
+      message: 'Auth token is not supplied'
+    });
   }
-
-  next();
 });
 
 app.use('/api/expences', expencesRoutes);
