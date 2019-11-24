@@ -24,6 +24,7 @@ const expenceList = expences =>
 
 const Expences = () => {
   const [expences, setExpences] = useState([]);
+  console.log({ expences });
 
   useEffect(() => {
     fetchData(setExpences);

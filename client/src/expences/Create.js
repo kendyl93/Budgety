@@ -10,6 +10,7 @@ const Create = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // TRY TO FETCH DATA IN PARENT COMPONENT TO PREVENT RENDERING ON AMOUNT CHANGE
         const { data: { user } = {} } = await getRequest();
 
         setCurrentUser(user);
@@ -21,8 +22,6 @@ const Create = () => {
     };
     fetchData();
   }, []);
-
-  console.log({ currentUser });
 
   const onChangeExpenceAmount = onChange(setAmount);
 

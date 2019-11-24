@@ -1,5 +1,6 @@
 import { db_connect } from './db';
 import {
+  ACCESS_TOKEN_COOKIE_NAME,
   FULL_CLIENT_HOST_URI,
   BACKEND_PORT,
   COOKIE_SECRET,
@@ -102,12 +103,13 @@ app.get(
             res.status(400).send('adding new user failed');
           });
       }
-      console.log({ user });
+
       const signedToken = jwt.sign(
         JSON.stringify({ email, name }),
         COOKIE_SECRET
       );
-      res.cookie('access_token', signedToken);
+
+      res.cookie(ACCESS_TOKEN_COOKIE_NAME, signedToken);
       return res.redirect(FULL_CLIENT_HOST_URI);
     } catch (error) {
       console.error(error);
@@ -123,7 +125,8 @@ db_connect();
 app.use('/api', apiRouter);
 
 app.use('/', async (req, res) => {
-  const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
+  const accessTokenCookie =
+    req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
 
   if (!accessTokenCookie) {
     return res.redirect('/login');

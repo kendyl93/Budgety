@@ -1,6 +1,26 @@
 import { v4 as uuid } from 'uuid';
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
 
 const Expence = require('./Model');
+const User = require('../users/Model');
+
+const getCurrentUserId = async req => {
+  const accessTokenCookie =
+    req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
+  const maybeSignedToken = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+  const { email } = maybeSignedToken || {};
+
+  try {
+    const { _id: currentUserId } = await User.findOne({ email });
+    if (!currentUserId) {
+      throw new Error('Current user not found!');
+    }
+    return currentUserId;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const show = async (req, res) => {
   const {
@@ -18,16 +38,19 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  Expence.find((err, expences) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(expences);
-    }
-  });
+  try {
+    const currentUserId = getCurrentUserId(req);
+    const expences = await Expence.find({ user_id: currentUserId });
+
+    return res.status(200).json(expences);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
 };
 
 export const update = async (req, res) => {
+  // ADD CURRENT USER CHECK
   const {
     params: { id }
   } = req;
