@@ -18,21 +18,32 @@ import passport from 'passport';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const checkTokenAuthorization = (req, res, next) => {
+  console.log('@@@@@');
+  console.log('@@@@@');
+
+  console.log({ req });
+  console.log('@@@@@');
+  console.log('@@@@@');
   const tokenWithBearer =
     req.headers['x-access-token'] || req.headers['authorization'];
 
   if (!tokenWithBearer.startsWith('Bearer ')) {
+    console.log('1');
     return res.redirect('/login');
   }
 
   const token = tokenWithBearer.slice(7, tokenWithBearer.length);
 
   if (!token) {
+    console.log('2');
     return res.redirect('/login');
   }
-
+  console.log('-------');
+  console.log({ token });
   jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
     if (err) {
+      console.error(err);
+      console.log('3');
       return res.redirect('/login');
     } else {
       req.decoded = decoded;

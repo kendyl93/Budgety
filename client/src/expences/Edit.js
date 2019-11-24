@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
-const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env;
-const FULL_HOST_URI =
-  NODE_ENV === 'production'
-    ? `http://${HOST_URI}`
-    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
+import { getRequest, putRequest, deleteRequest } from '../api';
 
 class Edit extends Component {
   constructor(props) {
@@ -24,7 +18,7 @@ class Edit extends Component {
     } = this.props;
     const {
       data: { amount }
-    } = await axios(`${FULL_HOST_URI}/api/expences/${id}`);
+    } = await getRequest(`/expences/${id}`);
 
     this.setState({
       amount
@@ -41,7 +35,7 @@ class Edit extends Component {
     } = this.props;
     const expence = this.state;
 
-    await axios.put(`${FULL_HOST_URI}/api/expences/${id}`, expence);
+    await putRequest(`expences/${id}`, expence);
 
     this.props.history.push('/');
   };
@@ -53,7 +47,7 @@ class Edit extends Component {
       }
     } = this.props;
 
-    await axios.delete(`${FULL_HOST_URI}/api/expences/${id}`);
+    await deleteRequest(`/expences/${id}`);
 
     this.props.history.push('/');
   };

@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
-const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env;
-const FULL_HOST_URI =
-  NODE_ENV === 'production'
-    ? `http://${HOST_URI}`
-    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
-
-const endpoint = query => `${FULL_HOST_URI}/${query}`;
+import { postRequest } from '../api';
 
 const onChange = set => event => set(event.target.value);
 
@@ -25,9 +17,7 @@ const Create = () => {
 
     const expence = { amount: 5, _id: '123' };
 
-    axios
-      .post(endpoint('api/expences/add'), expence)
-      .then(res => console.log(res.data));
+    postRequest('/expences/add', expence).then(res => console.log(res.data));
 
     clearState();
   };

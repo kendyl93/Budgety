@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getRequest } from '../api';
 import { Link } from 'react-router-dom';
 
-const { HOST_URI, REVERSE_PROXY_PORT, NODE_ENV } = window.process.env || {};
-const FULL_HOST_URI =
-  NODE_ENV === 'production'
-    ? `http://${HOST_URI}`
-    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
-
 const fetchData = async setExpences => {
-  const result = await axios(`${FULL_HOST_URI}/api/expences`);
+  const result = await getRequest('/expences');
 
   setExpences(result.data);
 };
