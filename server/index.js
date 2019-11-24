@@ -1,12 +1,10 @@
 import { db_connect } from './db';
 import {
-  NODE_ENV,
+  FULL_CLIENT_HOST_URI,
   BACKEND_PORT,
   COOKIE_SECRET,
   GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  REVERSE_PROXY_PORT,
-  HOST_URI
+  GOOGLE_CLIENT_SECRET
 } from './environment';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -15,6 +13,7 @@ import cors from 'cors';
 import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import apiRouter from './api/router';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const checkTokenAuthorization = (req, res, next) => {
@@ -49,9 +48,6 @@ const checkTokenAuthorization = (req, res, next) => {
   });
 };
 
-const expencesRoutes = express.Router();
-const Expence = require('./Expences');
-
 const userRoutes = express.Router();
 const User = require('./Users');
 
@@ -60,17 +56,12 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const FULL_HOST_URI =
-  NODE_ENV === 'production'
-    ? `http://${HOST_URI}`
-    : `http://${HOST_URI}:${REVERSE_PROXY_PORT}`;
-
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: `${FULL_HOST_URI}/api/auth/google/callback`
+      callbackURL: `${FULL_CLIENT_HOST_URI}/api/auth/google/callback`
     },
     (accessToken, refreshToken, profile, done) => {
       const userData = {
@@ -119,7 +110,7 @@ app.get(
         COOKIE_SECRET
       );
       res.cookie('access_token', signedToken);
-      return res.redirect(FULL_HOST_URI);
+      return res.redirect(FULL_CLIENT_HOST_URI);
     } catch (error) {
       console.error(error);
       return res.sendStatus(500);
@@ -129,7 +120,7 @@ app.get(
 
 app.all('*', checkTokenAuthorization);
 
-app.use('/api/expences', expencesRoutes);
+app.use('/api', apiRouter);
 app.use('/api/users', userRoutes);
 
 db_connect();
@@ -166,86 +157,6 @@ userRoutes.route('/add').post(async (req, res, next) => {
 });
 
 ///////////////////////////////
-
-expencesRoutes.route('/').get((req, res) => {
-  Expence.find((err, expences) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(expences);
-    }
-  });
-});
-
-expencesRoutes.route('/:id').get((req, res) => {
-  const {
-    params: { id }
-  } = req;
-
-  Expence.findById(id, (_, expence) => {
-    res.json(expence);
-  });
-});
-
-expencesRoutes.route('/:id').put((req, res) => {
-  const {
-    params: { id }
-  } = req;
-
-  Expence.findById(id, (err, expence) => {
-    if (!expence) {
-      res.status(404).send('data is not found');
-    } else {
-      const {
-        body: { amount }
-      } = req;
-
-      expence.amount = amount;
-    }
-
-    expence
-      .save()
-      .then(() => {
-        res.json('Expence updated!');
-      })
-      .catch(() => {
-        res.status(400).send('Update not possible');
-      });
-  });
-});
-
-expencesRoutes.route('/:id').delete((req, res) => {
-  const {
-    params: { id }
-  } = req;
-
-  Expence.findById(id, (_, expence) => {
-    expence
-      .remove()
-      .then(() => {
-        res.json('Expence deleted!');
-      })
-      .catch(() => {
-        res.status(400).send('Update not possible');
-      });
-  });
-});
-
-expencesRoutes.route('/add').post((req, res) => {
-  const { body: { amount } = {} } = req;
-  const id = uuid();
-
-  const expence = new Expence({ amount, _id: id });
-
-  expence
-    .save()
-    .then(() => {
-      res.status(200).json({ expence: 'Expence added successfully' });
-    })
-    .catch(() => {
-      res.status(400).send('adding new expence failed');
-    });
-});
 
 app.use('/', (req, res) => {
   const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
