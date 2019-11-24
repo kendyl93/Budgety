@@ -8,9 +8,9 @@ export const getCookie = tokenName => {
   const existingCookie = document.cookie;
   const maybeCookies = existingCookie && existingCookie.split(';');
 
-  const cookieWithName = maybeCookies.find(cookie =>
-    cookie.startsWith(nameWithEaualSign)
-  );
+  const cookieWithName =
+    maybeCookies &&
+    maybeCookies.find(cookie => cookie.startsWith(nameWithEaualSign));
 
   const lastIndexOfTokenNameWithEqualSign = nameWithEaualSign.length;
   const lastIndexOfToken = cookieWithName.length;

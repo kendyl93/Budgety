@@ -2,6 +2,21 @@ import { v4 as uuid } from 'uuid';
 
 const Expence = require('./Model');
 
+export const show = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+
+  try {
+    const expence = await Expence.findOne({ _id: id });
+
+    return res.json(expence);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+};
+
 export const list = async (req, res) => {
   Expence.find((err, expences) => {
     if (err) {
@@ -9,16 +24,6 @@ export const list = async (req, res) => {
     } else {
       res.json(expences);
     }
-  });
-};
-
-export const show = (req, res) => {
-  const {
-    params: { id }
-  } = req;
-
-  Expence.findById(id, (_, expence) => {
-    res.json(expence);
   });
 };
 

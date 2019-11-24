@@ -15,6 +15,7 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import apiRouter from './api/router';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const User = require('./api/users/Model');
 
 const checkTokenAuthorization = (req, res, next) => {
   const tokenWithBearer =
@@ -47,9 +48,6 @@ const checkTokenAuthorization = (req, res, next) => {
     }
   });
 };
-
-const userRoutes = express.Router();
-const User = require('./Users');
 
 const app = express();
 app.use(cors());
@@ -120,57 +118,35 @@ app.get(
 
 app.all('*', checkTokenAuthorization);
 
-app.use('/api', apiRouter);
-app.use('/api/users', userRoutes);
-
 db_connect();
 
-userRoutes.route('/').get((req, res, next) => {
-  User.find((err, users) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(users);
-    }
-  });
-});
+app.use('/api', apiRouter);
 
-userRoutes.route('/add').post(async (req, res, next) => {
-  const { body } = req;
-
-  const { user: { name = '', email = '' } = {} } = body;
-
-  try {
-    if (name) {
-      const id = uuid();
-      const user = new User({ _id: id, name, email });
-      await user.save();
-    } else {
-      throw new Error('User must have at least a name!');
-    }
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-
-  res.sendStatus(200);
-});
-
-///////////////////////////////
-
-app.use('/', (req, res) => {
+app.use('/', async (req, res) => {
   const accessTokenCookie = res && req.cookies && req.cookies['access_token'];
 
   if (!accessTokenCookie) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
-  const TOKEN_signedornot = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+  const maybeSignedToken = jwt.verify(accessTokenCookie, COOKIE_SECRET);
 
-  if (!TOKEN_signedornot) {
-    res.redirect('/login');
+  if (!maybeSignedToken) {
+    return res.redirect('/login');
   }
 
-  res.status(200).send({ name: TOKEN_signedornot.name });
+  try {
+    const { email } = maybeSignedToken;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error('User is not signed in!');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.redirect('/login');
+  }
+
+  res.status(200).send({ name: maybeSignedToken.name });
   return res.end();
 });
 
