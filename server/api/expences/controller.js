@@ -72,10 +72,14 @@ export const remove = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  const { body: { amount } = {} } = req;
+  const { body: { amount, userId } = {} } = req;
   const id = uuid();
 
-  const expence = new Expence({ amount, _id: id });
+  console.log('&&&&&&');
+  console.log({ amount, userId });
+  console.log('&&&&&&');
+
+  const expence = new Expence({ amount, _id: id, user_id: userId });
 
   expence
     .save()

@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
-import { postRequest } from '../api';
+import React, { useEffect, useState } from 'react';
+import { getRequest, postRequest } from '../api';
 
 const onChange = set => event => set(event.target.value);
 
 const Create = () => {
   const [amount, setAmount] = useState('');
+  const [currentUser, setCurrentUser] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: { user } = {} } = await getRequest();
+
+        setCurrentUser(user);
+
+        console.log({ user });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  console.log({ currentUser });
 
   const onChangeExpenceAmount = onChange(setAmount);
 
@@ -13,7 +31,9 @@ const Create = () => {
   const onSubmit = async event => {
     event.preventDefault();
 
-    const expence = { amount };
+    const { _id: currentUserId } = currentUser;
+
+    const expence = { amount, userId: currentUserId };
 
     await postRequest('expences/add', expence);
 

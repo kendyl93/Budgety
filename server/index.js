@@ -141,13 +141,13 @@ app.use('/', async (req, res) => {
     if (!user) {
       throw new Error('User is not signed in!');
     }
+
+    res.status(200).send({ user });
+    return res.end();
   } catch (error) {
     console.error(error);
     return res.redirect('/login');
   }
-
-  res.status(200).send({ name: maybeSignedToken.name });
-  return res.end();
 });
 
 app.listen(BACKEND_PORT, () => {

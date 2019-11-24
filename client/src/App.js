@@ -13,15 +13,19 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getRequest();
-        setCurrentUser(result.data);
-        console.log({ result: result.data });
+        const { data: { user } = {} } = await getRequest();
+
+        setCurrentUser(user);
+
+        console.log({ user });
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
   }, []);
+
+  console.log({ currentUser });
 
   return (
     <Router>

@@ -6,6 +6,9 @@ const Expence = new Schema({
   _id: {
     type: String
   },
+  user_id: {
+    type: String
+  },
   amount: {
     type: Number
   }
