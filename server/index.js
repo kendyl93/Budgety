@@ -18,32 +18,29 @@ import passport from 'passport';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const checkTokenAuthorization = (req, res, next) => {
-  console.log('@@@@@');
-  console.log('@@@@@');
-
-  console.log({ req });
-  console.log('@@@@@');
-  console.log('@@@@@');
   const tokenWithBearer =
     req.headers['x-access-token'] || req.headers['authorization'];
 
+  if (!tokenWithBearer) {
+    console.error('No token found!');
+    return res.redirect('/login');
+  }
+
   if (!tokenWithBearer.startsWith('Bearer ')) {
-    console.log('1');
+    console.error('Invalid token!');
     return res.redirect('/login');
   }
 
   const token = tokenWithBearer.slice(7, tokenWithBearer.length);
 
   if (!token) {
-    console.log('2');
+    console.error("Invalid token's signature!");
     return res.redirect('/login');
   }
-  console.log('-------');
-  console.log({ token });
+
   jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
     if (err) {
       console.error(err);
-      console.log('3');
       return res.redirect('/login');
     } else {
       req.decoded = decoded;
@@ -150,14 +147,12 @@ userRoutes.route('/').get((req, res, next) => {
 userRoutes.route('/add').post(async (req, res, next) => {
   const { body } = req;
 
-  const { user: { name = '', facebookId = '' } = {} } = body;
-
-  console.log({ name });
+  const { user: { name = '', email = '' } = {} } = body;
 
   try {
     if (name) {
       const id = uuid();
-      const user = new User({ _id: id, name, facebookId });
+      const user = new User({ _id: id, name, email });
       await user.save();
     } else {
       throw new Error('User must have at least a name!');
@@ -237,7 +232,10 @@ expencesRoutes.route('/:id').delete((req, res) => {
 });
 
 expencesRoutes.route('/add').post((req, res) => {
-  const expence = new Expence(req.body);
+  const { body: { amount } = {} } = req;
+  const id = uuid();
+
+  const expence = new Expence({ amount, _id: id });
 
   expence
     .save()

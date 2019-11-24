@@ -27,9 +27,12 @@ const requestConfig = {
 
 export const getRequest = async (endpoint = '') =>
   await axios.get(`${FULL_HOST_URI}/${endpoint}`, requestConfig);
-export const putRequest = async (endpoint = '') =>
-  await axios.put(`${FULL_HOST_URI}/${endpoint}`, requestConfig); // needts improovement - send expence in request
-export const postRequest = async (endpoint = '') =>
-  await axios.post(`${FULL_HOST_URI}/${endpoint}`, requestConfig);
+
+export const putRequest = async (endpoint = '', data) =>
+  await axios.put(`${FULL_HOST_URI}/${endpoint}`, data, requestConfig);
+
+export const postRequest = async (endpoint = '', data) =>
+  await axios.post(`${FULL_HOST_URI}/${endpoint}`, data, requestConfig);
+
 export const deleteRequest = async (endpoint = '') =>
   await axios.delete(`${FULL_HOST_URI}/${endpoint}`, requestConfig);

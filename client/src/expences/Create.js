@@ -4,20 +4,18 @@ import { postRequest } from '../api';
 const onChange = set => event => set(event.target.value);
 
 const Create = () => {
-  const [amount, setAmount] = useState(77);
+  const [amount, setAmount] = useState('');
 
   const onChangeExpenceAmount = onChange(setAmount);
 
-  const clearState = () => {
-    onChangeExpenceAmount(undefined);
-  };
+  const clearState = () => setAmount('');
 
-  const onSubmit = event => {
+  const onSubmit = async event => {
     event.preventDefault();
 
-    const expence = { amount: 5, _id: '123' };
+    const expence = { amount };
 
-    postRequest('/expences/add', expence).then(res => console.log(res.data));
+    await postRequest('expences/add', expence);
 
     clearState();
   };
@@ -39,6 +37,7 @@ const Create = () => {
         <div className="form-group">
           <input
             className="btn btn-primary"
+            disabled={!amount}
             type="submit"
             value="Create Expence"
           />

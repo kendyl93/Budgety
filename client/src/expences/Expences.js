@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRequest } from '../api';
-import { Link } from 'react-router-dom';
+import Link from '../UI/Link';
 
 const fetchData = async setExpences => {
   const result = await getRequest('/expences');
@@ -13,7 +13,7 @@ const Expence = ({ expence: { amount, _id: id } }) => {
     <tr>
       <td>{amount}</td>
       <td>
-        <Link to={`/edit/${id}`}>Edit</Link>
+        <Link path={`expences/edit/${id}`}>Edit</Link>
       </td>
     </tr>
   );
@@ -42,6 +42,8 @@ const Expences = () => {
           {expences && expences.length > 0 && expenceList(expences)}
         </tbody>
       </table>
+
+      <Link path="/expences/create">Create</Link>
     </div>
   );
 };
