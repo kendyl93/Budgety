@@ -1,6 +1,6 @@
 # Budgety react app(in progress)
 
-This app is created to calculate budget with my hommies. App is deployed on [AWS](http://ec2-18-216-56-193.us-east-2.compute.amazonaws.com)
+This app is created to calculate budget with my hommies. App is deployed on [AWS](http://ec2-18-216-56-193.us-east-2.compute.amazonaws.com).
 
 ## dev
 
@@ -31,8 +31,6 @@ Frontend:
 - Jest
 - SASS
 
-App was deployed and store in Heroku.
-
 #### TODO (Still in progress)
 
 1. Deploying automation
@@ -57,8 +55,9 @@ App was deployed and store in Heroku.
 ##### Deploying client-server (Heroku) - not supported any more
 
 0. Make sure to update the `.env` file if needed.
-1. Check `.env` variables on client side
-1. Build client `npm run build` make sure you are in the client directory
-1. Copy builded files to `public` direactory on server and commit changes
-1. Push changes to heroku master `git push heroku master`
-1. Revert `.env` variables on the client side if needed
+
+- Check `.env` variables on client side
+- Build client `npm run build` make sure you are in the client directory
+- Copy builded files to `public` direactory on server and commit changes
+- Push changes to heroku master `git push heroku master`
+- Revert `.env` variables on the client side if needed
