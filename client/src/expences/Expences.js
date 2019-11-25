@@ -3,7 +3,7 @@ import { getRequest } from '../api';
 import Link from '../UI/Link';
 
 const fetchData = async setExpences => {
-  const result = await getRequest('/expences');
+  const result = await getRequest('expences');
 
   setExpences(result.data);
 };

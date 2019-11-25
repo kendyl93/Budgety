@@ -10,9 +10,9 @@ const getCurrentUserId = async req => {
     req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
   const maybeSignedToken = jwt.verify(accessTokenCookie, COOKIE_SECRET);
   const { email } = maybeSignedToken || {};
-
   try {
     const { _id: currentUserId } = await User.findOne({ email });
+
     if (!currentUserId) {
       throw new Error('Current user not found!');
     }
@@ -39,7 +39,7 @@ export const show = async (req, res) => {
 
 export const list = async (req, res) => {
   try {
-    const currentUserId = getCurrentUserId(req);
+    const currentUserId = await getCurrentUserId(req);
     const expences = await Expence.find({ user_id: currentUserId });
 
     return res.status(200).json(expences);
@@ -49,22 +49,21 @@ export const list = async (req, res) => {
   }
 };
 
-export const update = async (req, res) => {
-  // ADD CURRENT USER CHECK
+export const update = (req, res) => {
   const {
     params: { id }
   } = req;
 
-  Expence.findById(id, (err, expence) => {
+  Expence.findById(id, expence => {
     if (!expence) {
-      res.status(404).send('data is not found');
-    } else {
-      const {
-        body: { amount }
-      } = req;
-
-      expence.amount = amount;
+      res.status(404).send('Expence is not found');
     }
+
+    const {
+      body: { amount }
+    } = req;
+
+    expence.amount = amount;
 
     expence
       .save()
@@ -97,10 +96,6 @@ export const remove = async (req, res) => {
 export const create = async (req, res) => {
   const { body: { amount, userId } = {} } = req;
   const id = uuid();
-
-  console.log('&&&&&&');
-  console.log({ amount, userId });
-  console.log('&&&&&&');
 
   const expence = new Expence({ amount, _id: id, user_id: userId });
 
