@@ -6,24 +6,10 @@ import './App.scss';
 
 import Login from './login/Login';
 import Home from './Home/Home';
+import { useCurrentUser } from './hooks';
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: { user } = {} } = await getRequest();
-
-        setCurrentUser(user);
-
-        console.log({ user });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const currentUser = useCurrentUser();
 
   console.log({ currentUser });
 

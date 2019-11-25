@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { getRequest, postRequest } from '../api';
+import React, { useState } from 'react';
+import { postRequest } from '../api';
+import { useCurrentUser } from '../hooks';
 
 const onChange = set => event => set(event.target.value);
 
 const Create = () => {
   const [amount, setAmount] = useState('');
-  const [currentUser, setCurrentUser] = useState();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // TRY TO FETCH DATA IN PARENT COMPONENT TO PREVENT RENDERING ON AMOUNT CHANGE
-        const { data: { user } = {} } = await getRequest();
-
-        setCurrentUser(user);
-
-        console.log({ user });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const currentUser = useCurrentUser();
 
   const onChangeExpenceAmount = onChange(setAmount);
 
