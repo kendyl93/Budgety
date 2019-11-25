@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter as Router } from 'react-router-dom';
-import { getRequest } from './api';
 
 import './App.scss';
 
@@ -15,7 +14,15 @@ const App = () => {
 
   return (
     <Router>
-      <div>{currentUser ? <Home currentUser={currentUser} /> : <Login />}</div>
+      <div>
+        {currentUser === undefined ? (
+          <div>SPINNER</div>
+        ) : currentUser === null ? (
+          <Login />
+        ) : (
+          <Home currentUser={currentUser} />
+        )}
+      </div>
     </Router>
   );
 };

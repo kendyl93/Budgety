@@ -2,15 +2,18 @@ import { useState, useEffect } from 'react';
 import { getRequest } from './api';
 
 export const useCurrentUser = () => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: { user } = {} } = await getRequest();
+        const { data } = await getRequest();
+        const { user = null } = data;
+        console.log({ data });
 
         setCurrentUser(user);
       } catch (error) {
+        setCurrentUser(null);
         console.error(error);
       }
     };
