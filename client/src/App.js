@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 
 import './App.scss';
 
+import Spinner from './UI/Spinner';
 import Login from './login/Login';
 import Home from './Home/Home';
 import { useCurrentUser } from './hooks';
 
 const App = () => {
   const currentUser = useCurrentUser();
-
-  console.log({ currentUser });
+  const userNotLoadedYet = currentUser === undefined;
+  const userNotSigned = currentUser === null;
 
   return (
     <Router>
-      <div>
-        {currentUser === undefined ? (
-          <div>SPINNER</div>
-        ) : currentUser === null ? (
+      {userNotLoadedYet ? (
+        <Spinner />
+      ) : userNotSigned ? (
+        <div>
           <Login />
-        ) : (
+        </div>
+      ) : (
+        <div>
           <Home currentUser={currentUser} />
-        )}
-      </div>
+        </div>
+      )}
     </Router>
   );
 };
