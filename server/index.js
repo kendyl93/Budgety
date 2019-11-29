@@ -118,6 +118,15 @@ app.get(
   }
 );
 
+app.get('api/logout', (req, res) => {
+  res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+
+  console.log('@@@');
+
+  res.redirect('/');
+  return res.end();
+});
+
 app.all('*', checkTokenAuthorization);
 
 db_connect();

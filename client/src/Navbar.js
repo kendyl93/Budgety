@@ -7,6 +7,7 @@ import {
   AttachMoney as IncomesIcon,
   SettingsApplication as SettingsIcon
 } from './UI/icons';
+import { getRequest } from './api';
 
 const Navbar = ({ currentUser }) => (
   <div className="navbar-container">
@@ -41,6 +42,16 @@ const Navbar = ({ currentUser }) => (
             <div>Settings</div>
           </div>
         </Link>
+        <div
+          onClick={async () => {
+            const dupa = await getRequest('logout');
+            console.log({ dupa });
+          }}
+        >
+          <div className="link col-spacing">
+            <div>Logout</div>
+          </div>
+        </div>
       </div>
     </nav>
   </div>
