@@ -119,8 +119,11 @@ app.get(
 );
 
 app.get('/api/logout', (req, res) => {
-  console.log({ ACCESS_TOKEN_COOKIE_NAME });
-  res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+  try {
+    res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+  } catch (error) {
+    return console.error(error);
+  }
 
   res.redirect('/');
   return res.end();
