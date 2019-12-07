@@ -44,8 +44,12 @@ const Navbar = ({ currentUser }) => (
         </Link>
         <div
           onClick={async () => {
-            const dupa = await getRequest('logout');
-            console.log({ dupa });
+            try {
+              await getRequest('logout');
+              location.reload();
+            } catch (error) {
+              console.error(error);
+            }
           }}
         >
           <div className="link col-spacing">

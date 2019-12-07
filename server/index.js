@@ -118,10 +118,9 @@ app.get(
   }
 );
 
-app.get('api/logout', (req, res) => {
+app.get('/api/logout', (req, res) => {
+  console.log({ ACCESS_TOKEN_COOKIE_NAME });
   res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
-
-  console.log('@@@');
 
   res.redirect('/');
   return res.end();
