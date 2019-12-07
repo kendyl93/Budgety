@@ -5,9 +5,19 @@ import {
   Home as DashboardIcon,
   MoneyOff as ExpencesIcon,
   AttachMoney as IncomesIcon,
-  SettingsApplication as SettingsIcon
+  SettingsApplication as SettingsIcon,
+  ExitToApp as LogOutIcon
 } from './UI/icons';
 import { getRequest } from './api';
+
+const logOut = () => async () => {
+  try {
+    await getRequest('logout');
+    location.reload();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const Navbar = ({ currentUser }) => (
   <div className="navbar-container">
@@ -42,18 +52,9 @@ const Navbar = ({ currentUser }) => (
             <div>Settings</div>
           </div>
         </Link>
-        <div
-          onClick={async () => {
-            try {
-              await getRequest('logout');
-              location.reload();
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-        >
+        <div className="pretend-link" onClick={logOut}>
           <div className="link col-spacing">
-            <div>Logout</div>
+            <LogOutIcon /> <div>Logout</div>
           </div>
         </div>
       </div>

@@ -17,12 +17,14 @@ code {
     monospace;
 }
 
+.pretend-link,
 a {
   color: $textColor;
   font-weight: 500;
   @include transition;
 
   &:hover {
+    cursor: pointer;
     color: $blue;
     text-decoration: none;
 
