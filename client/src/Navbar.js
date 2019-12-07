@@ -10,7 +10,7 @@ import {
 } from './UI/icons';
 import { getRequest } from './api';
 
-const logOut = () => async () => {
+const logOut = async () => {
   try {
     await getRequest('logout');
     location.reload();
