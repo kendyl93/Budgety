@@ -14,9 +14,30 @@ const onCreateGroup = async data => {
   }
 };
 
+const GroupMembers = members => {
+  return (
+    <div>
+      {members !== undefined &&
+        members.length > 0 &&
+        members.map(member => member)}
+    </div>
+  );
+};
+
+const Group = ({ group }) => {
+  const { name, members = [], owner_id: ownerId } = group;
+
+  return (
+    <div>
+      <h2>Group name: {name}</h2>
+      <h3>Owner: {ownerId}</h3>
+      <GroupMembers members={members} />
+    </div>
+  );
+};
 const Dashboard = () => {
   const [name, setName] = useState('');
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState(undefined);
   const currentUser = useCurrentUser();
   console.log({ groups, currentUser });
 
@@ -42,7 +63,9 @@ const Dashboard = () => {
         <input onChange={setGroupName} type="text" />
         <input type="submit" value="Create" />
       </form>
-      <h2>Your groups</h2>
+      <h1>Your groups</h1>
+
+      {groups && groups.map(group => <Group group={group} key={group.name} />)}
     </div>
   );
 };
