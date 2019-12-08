@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { postRequest } from '../api';
+import React, { useEffect, useState } from 'react';
+import { fetchData, postRequest } from '../api';
+
+const GROUPS_ENSPOINT = 'groups';
 
 const create = data => postRequest('group', data);
 
 const onCreateGroup = async name => {
   try {
-    console.log({ name });
-    // await create(name);
+    await create(name);
   } catch (error) {
     console.error(error);
   }
@@ -14,6 +15,12 @@ const onCreateGroup = async name => {
 
 const Dashboard = () => {
   const [name, setName] = useState('');
+  const [groups, setGroups] = useState([]);
+  console.log({ groups });
+
+  useEffect(() => {
+    fetchData(setGroups, GROUPS_ENSPOINT);
+  }, []);
 
   const setGroupName = () => {
     const {

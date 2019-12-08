@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getRequest } from '../api';
+import { fetchData } from '../api';
 import Link from '../UI/Link';
 
-const fetchData = async setExpences => {
-  const result = await getRequest('expences');
-
-  setExpences(result.data);
-};
+const EXPENCES_ENSPOINT = 'expences';
 
 const Expence = ({ expence: { amount, _id: id } }) => {
   return (
@@ -27,7 +23,7 @@ const Expences = () => {
   console.log({ expences });
 
   useEffect(() => {
-    fetchData(setExpences);
+    fetchData(setExpences, EXPENCES_ENSPOINT);
   }, []);
 
   return (

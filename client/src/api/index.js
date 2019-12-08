@@ -36,3 +36,9 @@ export const postRequest = async (endpoint = '', data) =>
 
 export const deleteRequest = async (endpoint = '') =>
   await axios.delete(`${FULL_HOST_URI}/${endpoint}`, requestConfig);
+
+export const fetchData = async (setData, endpoint) => {
+  const { data } = await getRequest(endpoint);
+
+  setData(data);
+};
