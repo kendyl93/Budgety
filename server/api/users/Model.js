@@ -12,7 +12,7 @@ const User = new Schema({
   name: {
     type: String
   },
-  groupShip: [String]
+  groups: []
 });
 
 module.exports = mongoose.model('Users', User);

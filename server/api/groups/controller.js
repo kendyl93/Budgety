@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 const Group = require('./Model');
 const User = require('../users/Model');
-const MemberShip = require('../memberShips/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
 
@@ -23,6 +22,8 @@ const getCurrentUserId = async req => {
     console.error(error);
   }
 };
+
+const updateUser = async user => await user.save();
 
 export const show = async (req, res) => {
   const {
@@ -51,29 +52,25 @@ export const list = async (req, res) => {
 
 export const create = async (req, res) => {
   const { body } = req;
-
   const { user: { email = '' } = {}, name } = body;
-  console.log('#######');
-  console.log({ body });
-  console.log('######');
+
+  const currentUser = await User.findOne({ email });
+  const { _id: currentUserId, name: userName } = currentUser;
+
   try {
     if (name) {
-      const memberShipId = uuid();
-      const memberShip = new MemberShip({
-        _id: memberShipId,
-        requester: email,
-        recipient: email,
-        status: 2
-      });
-      await memberShip.save();
-
-      const groupId = uuid();
+      const id = uuid();
       const group = new Group({
-        _id: groupId,
+        _id: id,
         name,
-        owner_id: email,
-        memberShip: memberShipId
+        owner_id: currentUserId,
+        members: []
       });
+
+      group.members = [{ [currentUserId]: userName }];
+      currentUser.groups = [{ [id]: name }];
+
+      await updateUser(currentUser);
       await group.save();
     } else {
       throw new Error('Something went wrong while creating a group!');
