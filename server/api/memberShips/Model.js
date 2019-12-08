@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const GroupShip = new Schema({
+const MemberShip = new Schema({
   _id: {
     type: String
   },
@@ -20,4 +20,4 @@ const GroupShip = new Schema({
   }
 });
 
-module.exports = mongoose.model('GroupShips', GroupShip);
+module.exports = mongoose.model('MemberShips', MemberShip);

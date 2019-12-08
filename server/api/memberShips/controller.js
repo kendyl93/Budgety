@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-const GroupShip = require('./Model');
+const MemberShips = require('./Model');
 
 export const show = async (req, res) => {
   const {
@@ -8,9 +8,9 @@ export const show = async (req, res) => {
   } = req;
 
   try {
-    const groupShip = await GroupShip.findOne({ _id: id });
+    const memberShip = await MemberShips.findOne({ _id: id });
 
-    return res.json(groupShip);
+    return res.json(MemberShips);
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);
@@ -18,7 +18,7 @@ export const show = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-  GroupShip.find((err, users) => {
+  MemberShips.find((err, users) => {
     if (err) {
       console.log(err);
     } else {
@@ -29,13 +29,15 @@ export const list = async (req, res) => {
 
 export const create = async (req, res) => {
   const { body } = req;
-
+  console.log('#######111');
+  console.log({ body });
+  console.log('######111');
   const { user: { name = '', email = '' } = {} } = body;
 
   try {
     if (name) {
       const id = uuid();
-      const user = new GroupShip({ _id: id, name, email });
+      const user = new MemberShips({ _id: id, name, email });
       await user.save();
     } else {
       throw new Error('User must have at least a name!');

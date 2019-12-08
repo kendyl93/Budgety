@@ -1,6 +1,28 @@
 import { v4 as uuid } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 const Group = require('./Model');
+const User = require('../users/Model');
+const MemberShip = require('../memberShips/Model');
+
+import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
+
+const getCurrentUserId = async req => {
+  const accessTokenCookie =
+    req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
+  const maybeSignedToken = jwt.verify(accessTokenCookie, COOKIE_SECRET);
+  const { email } = maybeSignedToken || {};
+  try {
+    const { _id: currentUserId } = await User.findOne({ email });
+
+    if (!currentUserId) {
+      throw new Error('Current user not found!');
+    }
+    return currentUserId;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const show = async (req, res) => {
   const {
@@ -31,11 +53,27 @@ export const create = async (req, res) => {
   const { body } = req;
 
   const { user: { email = '' } = {}, name } = body;
-
+  console.log('#######');
+  console.log({ body });
+  console.log('######');
   try {
     if (name) {
-      const id = uuid();
-      const group = new Group({ _id: id, name, owner_id: email });
+      const memberShipId = uuid();
+      const memberShip = new MemberShip({
+        _id: memberShipId,
+        requester: email,
+        recipient: email,
+        status: 2
+      });
+      await memberShip.save();
+
+      const groupId = uuid();
+      const group = new Group({
+        _id: groupId,
+        name,
+        owner_id: email,
+        memberShip: memberShipId
+      });
       await group.save();
     } else {
       throw new Error('Something went wrong while creating a group!');
