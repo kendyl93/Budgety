@@ -9,7 +9,6 @@ export const useCurrentUser = () => {
       try {
         const { data } = await getRequest();
         const { user = null } = data;
-        console.log({ data });
 
         setCurrentUser(user);
       } catch (error) {

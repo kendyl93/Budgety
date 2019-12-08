@@ -30,12 +30,12 @@ export const list = async (req, res) => {
 export const create = async (req, res) => {
   const { body } = req;
 
-  const { user: { email = '' } = {}, name: groupName } = body;
+  const { user: { email = '' } = {}, name } = body;
 
   try {
     if (name) {
       const id = uuid();
-      const group = new Group({ _id: id, name: groupName, owner_id: email });
+      const group = new Group({ _id: id, name, owner_id: email });
       await group.save();
     } else {
       throw new Error('Something went wrong while creating a group!');
