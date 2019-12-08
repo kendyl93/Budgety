@@ -11,7 +11,8 @@ const User = new Schema({
   },
   name: {
     type: String
-  }
+  },
+  groupShip: [String]
 });
 
 module.exports = mongoose.model('Users', User);
