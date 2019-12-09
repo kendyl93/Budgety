@@ -160,6 +160,8 @@ app.use('/', async (req, res) => {
 
     const users = await User.find({});
 
+    // Refactor objects to be [[user_id]: { ...rest, id } , ...rest]
+
     if (!users) {
       throw new Error(
         'Something went wrong. Users are no available at the moment!'
@@ -168,6 +170,8 @@ app.use('/', async (req, res) => {
 
     const groups = await Group.find({});
 
+    // Refactor objects to be [[group_id]: { ...rest, id } , ...rest]
+
     if (!groups) {
       throw new Error(
         'Something went wrong. Groups are no available at the moment!'
@@ -175,6 +179,8 @@ app.use('/', async (req, res) => {
     }
 
     const expences = await Expence.find({});
+
+    // Refactor objects to be [[expences_id]: { ...rest, id } , ...rest]
 
     if (!expences) {
       throw new Error(
