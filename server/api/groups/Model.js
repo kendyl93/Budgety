@@ -10,11 +10,10 @@ const Group = new Schema({
     type: String,
     required: true
   },
-  owner_id: {
-    type: String,
-    required: true
-  },
-  members: []
+  owner: { type: String, ref: 'Users' },
+  rejected: [[{ type: String, ref: 'Users' }]],
+  invited: [[{ type: String, ref: 'Users' }]],
+  members: [[{ type: String, ref: 'Users' }]]
 });
 
 module.exports = mongoose.model('Groups', Group);

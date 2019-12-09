@@ -12,7 +12,9 @@ const User = new Schema({
   name: {
     type: String
   },
-  groups: []
+  groups_member: [{ type: String, ref: 'Groups' }],
+  groups_invited_to: [{ type: String, ref: 'Groups' }],
+  groups_rejected: [{ type: String, ref: 'Groups' }]
 });
 
 module.exports = mongoose.model('Users', User);

@@ -6,6 +6,12 @@ const User = require('../users/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
 
+const GROUP_STATUS = {
+  ACCEPTED: 2,
+  INVITED: 1,
+  REJECTED: 0
+};
+
 const getCurrentUserId = async req => {
   const accessTokenCookie =
     req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
@@ -55,7 +61,7 @@ export const create = async (req, res) => {
   const { user: { email = '' } = {}, name } = body;
 
   const currentUser = await User.findOne({ email });
-  const { _id: currentUserId, name: userName } = currentUser;
+  const { _id: currentUserId } = currentUser;
 
   try {
     if (name) {
@@ -64,11 +70,9 @@ export const create = async (req, res) => {
         _id: id,
         name,
         owner_id: currentUserId,
-        members: []
+        members: currentUser
       });
-
-      group.members = [{ [currentUserId]: userName }];
-      currentUser.groups = [{ [id]: name }];
+      currentUser.groups_member = [group];
 
       await updateUser(currentUser);
       await group.save();

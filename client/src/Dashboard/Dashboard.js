@@ -15,17 +15,21 @@ const onCreateGroup = async data => {
 };
 
 const GroupMembers = ({ members }) => {
+  const membersId = Object.keys(members);
   return (
     <div>
-      {members.map(user => (
-        <div key={Object.keys(user)}>{Object.values(user)}</div>
-      ))}
+      {membersId.map(memberId => {
+        const { id, name } = members[memberId];
+
+        return <div key={Object.keys(id)}>{Object.values(name)}</div>;
+      })}
     </div>
   );
 };
 
 const Group = ({ group }) => {
-  const { name, owner_id, members } = group;
+  const { name, members } = group;
+  console.log({ members });
 
   return (
     <div>
