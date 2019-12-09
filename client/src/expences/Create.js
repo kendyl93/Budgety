@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { postRequest } from '../api';
-import { useCurrentUser } from '../hooks';
+import { useDatabaseData } from '../hooks';
 
 const onChange = set => event => set(event.target.value);
 
 const Create = () => {
   const [amount, setAmount] = useState('');
-  const currentUser = useCurrentUser();
+  const { currentUser } = useDatabaseData();
 
   const onChangeExpenceAmount = onChange(setAmount);
 

@@ -17,6 +17,8 @@ import passport from 'passport';
 import apiRouter from './api/router';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./api/users/Model');
+const Group = require('./api/groups/Model');
+const Expence = require('./api/expences/Model');
 
 const checkTokenAuthorization = (req, res, next) => {
   const tokenWithBearer =
@@ -150,13 +152,37 @@ app.use('/', async (req, res) => {
 
   try {
     const { email } = maybeSignedToken;
-    const user = await User.findOne({ email });
+    const currentUser = await User.findOne({ email });
 
-    if (!user) {
+    if (!currentUser) {
       throw new Error('User is not signed in!');
     }
 
-    res.status(200).send({ user });
+    const users = await User.find({});
+
+    if (!users) {
+      throw new Error(
+        'Something went wrong. Users are no available at the moment!'
+      );
+    }
+
+    const groups = await Group.find({});
+
+    if (!groups) {
+      throw new Error(
+        'Something went wrong. Groups are no available at the moment!'
+      );
+    }
+
+    const expences = await Expence.find({});
+
+    if (!expences) {
+      throw new Error(
+        'Something went wrong. Expences are no available at the moment!'
+      );
+    }
+
+    res.status(200).send({ currentUser, users, groups, expences });
     return res.end();
   } catch (error) {
     console.error(error);

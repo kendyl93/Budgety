@@ -6,12 +6,12 @@ import './App.scss';
 import Spinner from './UI/Spinner';
 import Login from './login/Login';
 import Home from './Home/Home';
-import { useCurrentUser } from './hooks';
+import { useDatabaseData } from './hooks';
 
 const App = () => {
-  const currentUser = useCurrentUser();
-  const userNotLoadedYet = currentUser === undefined;
-  const userNotSigned = currentUser === null;
+  const allData = useDatabaseData();
+  const userNotLoadedYet = allData === undefined;
+  const userNotSigned = allData === null;
 
   return (
     <Router>
@@ -23,7 +23,7 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <Home currentUser={currentUser} />
+          <Home allData={allData} />
         </div>
       )}
     </Router>

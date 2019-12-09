@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchData, postRequest } from '../api';
-import { useCurrentUser } from '../hooks';
+import { useDatabaseData } from '../hooks';
 
 const GROUPS_ENSPOINT = 'groups';
 
@@ -27,26 +27,22 @@ const GroupMembers = ({ members }) => {
   );
 };
 
-const Group = ({ group }) => {
-  const { name, members } = group;
-  console.log({ members });
-
-  return (
-    <div>
-      <h2>Group name: {name}</h2>
+const Groups = ({ groups, currentUser }) => {
+  const userGroupsIds = currentUser.groups_member;
+  // const currentUserGroup = userGroups.filter(userGroup =>
+  //   groups.map(({ members }) => members.includes(userGroup))
+  // );
+  return userGroupsIds.map(groupId => (
+    <div key={groupId}>
+      <h2>Group name: {groups[groupId].name}</h2>
       <h3>Members:</h3>
-      {members && members.length > 0 && <GroupMembers members={members} />}
+      {/* {members && members.length > 0 && <GroupMembers members={members} />} */}
     </div>
-  );
+  ));
 };
-const Dashboard = () => {
-  const [name, setName] = useState('');
-  const [groups, setGroups] = useState(undefined);
-  const currentUser = useCurrentUser();
 
-  useEffect(() => {
-    fetchData(setGroups, GROUPS_ENSPOINT);
-  }, []);
+const Dashboard = ({ allData: { currentUser, groups } }) => {
+  const [name, setName] = useState('');
 
   const setGroupName = () => {
     const {
@@ -69,7 +65,7 @@ const Dashboard = () => {
       <h1>Your groups</h1>
       {console.log({ groups })}
 
-      {groups && groups.map(group => <Group group={group} key={group._id} />)}
+      <Groups currentUser={currentUser} groups={groups} />
     </div>
   );
 };

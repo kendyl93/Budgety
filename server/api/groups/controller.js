@@ -6,12 +6,6 @@ const User = require('../users/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
 
-const GROUP_STATUS = {
-  ACCEPTED: 2,
-  INVITED: 1,
-  REJECTED: 0
-};
-
 const getCurrentUserId = async req => {
   const accessTokenCookie =
     req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];

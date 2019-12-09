@@ -2,9 +2,9 @@ import React from 'react';
 
 import Routes from './Routes';
 
-const Main = () => (
+const Main = ({ allData }) => (
   <div className="container">
-    <Routes />
+    <Routes allData={allData} />
   </div>
 );
 
