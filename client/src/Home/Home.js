@@ -6,6 +6,8 @@ import Main from '../Main';
 const Home = ({ allData }) => {
   const { currentUser } = allData;
 
+  console.log({ allData });
+
   return (
     <div className="home-container">
       <div className="navbar-container">

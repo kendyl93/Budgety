@@ -55,7 +55,6 @@ export const create = async (req, res) => {
   const { user: { email = '' } = {}, name } = body;
 
   const currentUser = await User.findOne({ email });
-  const { _id: currentUserId } = currentUser;
 
   try {
     if (name) {
@@ -63,10 +62,11 @@ export const create = async (req, res) => {
       const group = new Group({
         _id: id,
         name,
-        owner_id: currentUserId,
         members: currentUser
       });
-      currentUser.groups_member = [group];
+
+      const userGroups = currentUser.groups_member;
+      currentUser.groups_member = [...userGroups, group];
 
       await updateUser(currentUser);
       await group.save();

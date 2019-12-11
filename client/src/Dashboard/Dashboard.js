@@ -15,29 +15,26 @@ const onCreateGroup = async data => {
 };
 
 const GroupMembers = ({ members }) => {
-  const membersId = Object.keys(members);
   return (
     <div>
-      {membersId.map(memberId => {
-        const { id, name } = members[memberId];
-
-        return <div key={Object.keys(id)}>{Object.values(name)}</div>;
+      {members.map(member => {
+        return <div key={member}>{member}</div>;
       })}
     </div>
   );
 };
 
 const Groups = ({ groups, currentUser }) => {
+  console.log({ currentUser });
   const userGroupsIds = currentUser.groups_member;
-  // const currentUserGroup = userGroups.filter(userGroup =>
-  //   groups.map(({ members }) => members.includes(userGroup))
-  // );
+  
   return userGroupsIds.map(groupId => (
     <div key={groupId}>
-      {/* should be here(on the frontend) as [[group_id]: { ...rest, id } , ...rest] === NEED TO CHANGE IT ON THE BACKEND SIDE*/}
       <h2>Group name: {groups[groupId].name}</h2>
       <h3>Members:</h3>
-      {/* {members && members.length > 0 && <GroupMembers members={members} />} */}
+      {groups[groupId].members && groups[groupId].members.length > 0 && (
+        <GroupMembers members={groups[groupId].members} />
+      )}
     </div>
   ));
 };
