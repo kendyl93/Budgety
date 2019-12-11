@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { fetchData, postRequest } from '../api';
-import { useDatabaseData } from '../hooks';
-
-const GROUPS_ENSPOINT = 'groups';
+import React, { useState } from 'react';
+import { postRequest } from '../api';
 
 const create = data => postRequest('groups', data);
 
@@ -14,32 +11,38 @@ const onCreateGroup = async data => {
   }
 };
 
-const GroupMembers = ({ members }) => {
-  return (
-    <div>
-      {members.map(member => {
-        return <div key={member}>{member}</div>;
-      })}
-    </div>
-  );
-};
+const GroupMembers = ({ members, users }) => (
+  <div>
+    {members.map(member => {
+      const { name } = users[member];
+      return <div key={member}>{name}</div>;
+    })}
+  </div>
+);
 
-const Groups = ({ groups, currentUser }) => {
-  console.log({ currentUser });
+const Group = ({ key, name, members, users }) => (
+  <div key={key}>
+    <h2>Group name: {name}</h2>
+    <h3>Members:</h3>
+    {members && members.length > 0 && (
+      <GroupMembers members={members} users={users} />
+    )}
+  </div>
+);
+
+const Groups = ({ groups, currentUser, users }) => {
   const userGroupsIds = currentUser.groups_member;
-  
-  return userGroupsIds.map(groupId => (
-    <div key={groupId}>
-      <h2>Group name: {groups[groupId].name}</h2>
-      <h3>Members:</h3>
-      {groups[groupId].members && groups[groupId].members.length > 0 && (
-        <GroupMembers members={groups[groupId].members} />
-      )}
-    </div>
-  ));
+
+  return userGroupsIds.map(groupId => {
+    const { name, members = [] } = groups[groupId];
+
+    console.log({ parent: members });
+
+    return <Group key={groupId} members={members} name={name} users={users} />;
+  });
 };
 
-const Dashboard = ({ allData: { currentUser, groups } }) => {
+const Dashboard = ({ allData: { currentUser, groups, users } }) => {
   const [name, setName] = useState('');
 
   const setGroupName = () => {
@@ -61,9 +64,9 @@ const Dashboard = ({ allData: { currentUser, groups } }) => {
         <input type="submit" value="Create" />
       </form>
       <h1>Your groups</h1>
-      {console.log({ groups })}
-
-      <Groups currentUser={currentUser} groups={groups} />
+      {groups && (
+        <Groups currentUser={currentUser} groups={groups} users={users} />
+      )}
     </div>
   );
 };
