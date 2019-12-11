@@ -5,6 +5,7 @@ import {
   FULL_CLIENT_HOST_URI,
   BACKEND_PORT,
   COOKIE_SECRET,
+  HOST_URI,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET
 } from './environment';
@@ -27,25 +28,25 @@ const checkTokenAuthorization = (req, res, next) => {
 
   if (!tokenWithBearer) {
     console.error('No token found!');
-    return res.redirect('/login');
+    return res.sendStatus(500);
   }
 
   if (!tokenWithBearer.startsWith('Bearer ')) {
     console.error('Invalid token!');
-    return res.redirect('/login');
+    return res.sendStatus(500);
   }
 
   const token = tokenWithBearer.slice(7, tokenWithBearer.length);
 
   if (!token) {
     console.error("Invalid token's signature!");
-    return res.redirect('/login');
+    return res.sendStatus(500);
   }
 
   jwt.verify(token, COOKIE_SECRET, (err, decoded) => {
     if (err) {
       console.error(err);
-      return res.redirect('/login');
+      return res.sendStatus(500);
     } else {
       req.decoded = decoded;
       next();
