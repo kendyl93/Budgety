@@ -9,8 +9,8 @@ const GroupMembers = ({ members, users }) => (
   </div>
 );
 
-const Group = ({ key, name, members, users }) => (
-  <div key={key}>
+const Group = ({ name, members, users }) => (
+  <div>
     <h2>Group name: {name}</h2>
     <h3>Members:</h3>
     {members && members.length > 0 && (
