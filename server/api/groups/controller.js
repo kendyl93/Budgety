@@ -65,8 +65,8 @@ export const create = async (req, res) => {
         members: currentUser
       });
 
-      const userGroups = currentUser.groups_member;
-      currentUser.groups_member = [...userGroups, group];
+      const userGroups = currentUser.groupsMember;
+      currentUser.groupsMember = [...userGroups, group];
 
       await updateUser(currentUser);
       await group.save();

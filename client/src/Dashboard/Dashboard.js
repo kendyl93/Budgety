@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { postRequest } from '../api';
+import Groups from './Groups/Groups';
 
 const create = data => postRequest('groups', data);
 
@@ -9,37 +11,6 @@ const onCreateGroup = async data => {
   } catch (error) {
     console.error(error);
   }
-};
-
-const GroupMembers = ({ members, users }) => (
-  <div>
-    {members.map(member => {
-      const { name } = users[member];
-      return <div key={member}>{name}</div>;
-    })}
-  </div>
-);
-
-const Group = ({ key, name, members, users }) => (
-  <div key={key}>
-    <h2>Group name: {name}</h2>
-    <h3>Members:</h3>
-    {members && members.length > 0 && (
-      <GroupMembers members={members} users={users} />
-    )}
-  </div>
-);
-
-const Groups = ({ groups, currentUser, users }) => {
-  const userGroupsIds = currentUser.groups_member;
-
-  return userGroupsIds.map(groupId => {
-    const { name, members = [] } = groups[groupId];
-
-    console.log({ parent: members });
-
-    return <Group key={groupId} members={members} name={name} users={users} />;
-  });
 };
 
 const Dashboard = ({ allData: { currentUser, groups, users } }) => {
