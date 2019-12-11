@@ -1,4 +1,5 @@
 import { db_connect } from './db';
+import _ from 'lodash';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   FULL_CLIENT_HOST_URI,
@@ -93,6 +94,7 @@ app.get(
 
     try {
       const user = await User.findOne({ email });
+
       if (!user) {
         const user = new User({ _id: uuid(), name, email });
 
@@ -160,17 +162,15 @@ app.use('/', async (req, res) => {
 
     const users = await User.find({});
 
-    // Refactor objects to be [[user_id]: { ...rest, id } , ...rest]
-
     if (!users) {
       throw new Error(
         'Something went wrong. Users are no available at the moment!'
       );
     }
 
-    const groups = await Group.find({});
+    const usersView = _.keyBy(users, '_id');
 
-    // Refactor objects to be [[group_id]: { ...rest, id } , ...rest]
+    const groups = await Group.find({});
 
     if (!groups) {
       throw new Error(
@@ -178,9 +178,9 @@ app.use('/', async (req, res) => {
       );
     }
 
-    const expences = await Expence.find({});
+    const groupsView = _.keyBy(groups, '_id');
 
-    // Refactor objects to be [[expences_id]: { ...rest, id } , ...rest]
+    const expences = await Expence.find({});
 
     if (!expences) {
       throw new Error(
@@ -188,7 +188,14 @@ app.use('/', async (req, res) => {
       );
     }
 
-    res.status(200).send({ currentUser, users, groups, expences });
+    const expencesView = _.keyBy(expences, '_id');
+
+    res.status(200).send({
+      currentUser,
+      users: usersView,
+      groups: groupsView,
+      expences: expencesView
+    });
     return res.end();
   } catch (error) {
     console.error(error);
