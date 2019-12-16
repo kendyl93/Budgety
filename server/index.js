@@ -140,6 +140,63 @@ db_connect();
 
 app.use('/api', apiRouter);
 
+const usersQuery = async () => {
+  const users = await User.find({});
+
+  if (!users) {
+    throw new Error(
+      'Something went wrong. Users are no available at the moment!'
+    );
+  }
+
+  const usersView = _.keyBy(users, '_id');
+
+  return usersView;
+};
+
+const groupsQuery = async () => {
+  const groups = await Group.find({});
+
+  if (!groups) {
+    throw new Error(
+      'Something went wrong. Groups are no available at the moment!'
+    );
+  }
+
+  const groupsView = _.keyBy(groups, '_id');
+
+  return groupsView;
+};
+
+const expencesQuery = async () => {
+  const expences = await Expence.find({});
+
+  if (!expences) {
+    throw new Error(
+      'Something went wrong. Expences are no available at the moment!'
+    );
+  }
+
+  const expencesView = _.keyBy(expences, '_id');
+
+  return expencesView;
+};
+
+const query = async token => {
+  const { email } = token;
+  const currentUser = await User.findOne({ email });
+
+  if (!currentUser) {
+    throw new Error('User is not signed in!');
+  }
+
+  const usersView = await usersQuery();
+  const groupsView = await groupsQuery();
+  const expencesView = await expencesQuery();
+
+  return { currentUser, usersView, groupsView, expencesView };
+};
+
 app.use('/', async (req, res) => {
   const accessTokenCookie =
     req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
@@ -154,42 +211,9 @@ app.use('/', async (req, res) => {
   }
 
   try {
-    const { email } = maybeSignedToken;
-    const currentUser = await User.findOne({ email });
-
-    if (!currentUser) {
-      throw new Error('User is not signed in!');
-    }
-
-    const users = await User.find({});
-
-    if (!users) {
-      throw new Error(
-        'Something went wrong. Users are no available at the moment!'
-      );
-    }
-
-    const usersView = _.keyBy(users, '_id');
-
-    const groups = await Group.find({});
-
-    if (!groups) {
-      throw new Error(
-        'Something went wrong. Groups are no available at the moment!'
-      );
-    }
-
-    const groupsView = _.keyBy(groups, '_id');
-
-    const expences = await Expence.find({});
-
-    if (!expences) {
-      throw new Error(
-        'Something went wrong. Expences are no available at the moment!'
-      );
-    }
-
-    const expencesView = _.keyBy(expences, '_id');
+    const { currentUser, usersView, groupsView, expencesView } = await query(
+      maybeSignedToken
+    );
 
     res.status(200).send({
       currentUser,
