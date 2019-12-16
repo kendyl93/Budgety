@@ -4,6 +4,12 @@ import User from './api/users/Model';
 import Group from './api/groups/Model';
 import Expence from './api/expences/Model';
 
+const allUserGroups = user => {
+  const { groupsMember, groupsInvitedTo } = user || {};
+
+  return [...groupsMember, ...groupsInvitedTo];
+};
+
 export const usersQuery = async () => {
   const users = await User.find({});
 
@@ -21,8 +27,7 @@ export const usersQuery = async () => {
 export const groupsQuery = async currentUser => {
   const groups = await Group.find({});
 
-  const { groupsMember, groupsInvitedTo } = currentUser || {};
-  const allcurrentUserGroups = [...groupsMember, ...groupsInvitedTo];
+  const allcurrentUserGroups = allUserGroups(currentUser);
 
   const currentUserGroups = groups.filter(({ _id: id }) =>
     allcurrentUserGroups.includes(id)
