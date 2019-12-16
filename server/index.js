@@ -1,5 +1,4 @@
 import { db_connect } from './db';
-import _ from 'lodash';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   FULL_CLIENT_HOST_URI,
@@ -17,10 +16,14 @@ import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import apiRouter from './api/router';
+import {
+  usersQuery,
+  expencesQuery,
+  groupsQuery,
+  currentUserQuery
+} from './queries';
+import User from './api/users/Model';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('./api/users/Model');
-const Group = require('./api/groups/Model');
-const Expence = require('./api/expences/Model');
 
 const checkTokenAuthorization = (req, res, next) => {
   const tokenWithBearer =
@@ -140,56 +143,10 @@ db_connect();
 
 app.use('/api', apiRouter);
 
-const usersQuery = async () => {
-  const users = await User.find({});
-
-  if (!users) {
-    throw new Error(
-      'Something went wrong. Users are no available at the moment!'
-    );
-  }
-
-  const usersView = _.keyBy(users, '_id');
-
-  return usersView;
-};
-
-const groupsQuery = async () => {
-  const groups = await Group.find({});
-
-  if (!groups) {
-    throw new Error(
-      'Something went wrong. Groups are no available at the moment!'
-    );
-  }
-
-  const groupsView = _.keyBy(groups, '_id');
-
-  return groupsView;
-};
-
-const expencesQuery = async () => {
-  const expences = await Expence.find({});
-
-  if (!expences) {
-    throw new Error(
-      'Something went wrong. Expences are no available at the moment!'
-    );
-  }
-
-  const expencesView = _.keyBy(expences, '_id');
-
-  return expencesView;
-};
-
 const query = async token => {
   const { email } = token;
-  const currentUser = await User.findOne({ email });
 
-  if (!currentUser) {
-    throw new Error('User is not signed in!');
-  }
-
+  const currentUser = await currentUserQuery(email);
   const usersView = await usersQuery();
   const groupsView = await groupsQuery();
   const expencesView = await expencesQuery();
