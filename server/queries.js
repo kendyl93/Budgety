@@ -18,8 +18,15 @@ export const usersQuery = async () => {
   return usersView;
 };
 
-export const groupsQuery = async () => {
+export const groupsQuery = async currentUser => {
   const groups = await Group.find({});
+
+  const { groupsMember, groupsInvitedTo } = currentUser || {};
+  const allcurrentUserGroups = [...groupsMember, ...groupsInvitedTo];
+
+  const currentUserGroups = groups.filter(({ _id: id }) =>
+    allcurrentUserGroups.includes(id)
+  );
 
   if (!groups) {
     throw new Error(
@@ -27,7 +34,7 @@ export const groupsQuery = async () => {
     );
   }
 
-  const groupsView = _.keyBy(groups, '_id');
+  const groupsView = _.keyBy(currentUserGroups, '_id');
 
   return groupsView;
 };

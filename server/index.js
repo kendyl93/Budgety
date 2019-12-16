@@ -147,8 +147,9 @@ const query = async token => {
   const { email } = token;
 
   const currentUser = await currentUserQuery(email);
+
   const usersView = await usersQuery();
-  const groupsView = await groupsQuery();
+  const groupsView = await groupsQuery(currentUser);
   const expencesView = await expencesQuery();
 
   return { currentUser, usersView, groupsView, expencesView };
