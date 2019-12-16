@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { postRequest } from '../../api';
+import { postRequest } from '../api';
 
 const create = data => postRequest('groups', data);
 
