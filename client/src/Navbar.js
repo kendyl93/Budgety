@@ -6,7 +6,8 @@ import {
   MoneyOff as ExpencesIcon,
   AttachMoney as IncomesIcon,
   SettingsApplication as SettingsIcon,
-  ExitToApp as LogOutIcon
+  ExitToApp as LogOutIcon,
+  People as GroupsApp
 } from './UI/icons';
 import { getRequest } from './api';
 
@@ -32,6 +33,12 @@ const Navbar = ({ currentUser }) => (
           <div className="link col-spacing">
             <DashboardIcon />
             <div>Dashboard</div>
+          </div>
+        </Link>
+        <Link path="/groups">
+          <div className="link col-spacing">
+            <GroupsApp />
+            <div>Groups</div>
           </div>
         </Link>
         <Link path="/expences">
