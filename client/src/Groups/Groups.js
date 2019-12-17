@@ -8,7 +8,15 @@ const GroupList = ({ groups, currentUser, users }) => {
   return userGroupsIds.map(groupId => {
     const { name, members = [] } = groups[groupId];
 
-    return <Group key={groupId} members={members} name={name} users={users} />;
+    return (
+      <Group
+        id={groupId}
+        key={groupId}
+        members={members}
+        name={name}
+        users={users}
+      />
+    );
   });
 };
 
@@ -19,7 +27,9 @@ const Groups = ({ allData: { currentUser, groups, users } }) => {
 
       <h1>Your groups</h1>
       {groups && (
-        <GroupList currentUser={currentUser} groups={groups} users={users} />
+        <div className="groups-wrapper col-spacing row-spacing">
+          <GroupList currentUser={currentUser} groups={groups} users={users} />
+        </div>
       )}
     </div>
   );
