@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import Avatar from '../UI/Avatar';
+
 const getIdFromUri = () => {
   const { href } = location;
   const splittedHref = href.split('/');
@@ -17,11 +19,6 @@ const handleChange = set => () => {
   set(value);
 };
 
-const Avatar = ({ name }) => (
-  <div className="avatar-box">
-    <span>{name.charAt(0).toUpperCase()}</span>
-  </div>
-);
 const Group = ({ groups, users }) => {
   const id = getIdFromUri();
   const {
