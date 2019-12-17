@@ -7,6 +7,7 @@ import Edit from './expences/Edit';
 import Dashboard from './Dashboard/Dashboard';
 import Groups from './Groups/Groups';
 import Group from './Groups/Group';
+import Member from './Members/Member';
 
 //passing props needs to be improved!
 const Routes = props => {
@@ -22,7 +23,12 @@ const Routes = props => {
       <Route
         component={() => <Group groups={groups} users={users} />}
         exact
-        path="/groups/:id"
+        path="/groups/:groupId"
+      />
+      <Route
+        component={() => <Member {...props} />}
+        exact
+        path="/groups/:groupId/members/:userId"
       />
       <Route component={Expences} exact path="/expences" />
       <Route component={Edit} path="/expences/edit/:id" />

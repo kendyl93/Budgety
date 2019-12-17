@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Avatar from '../UI/Avatar';
+import Link from '../UI/Link';
 
 const getIdFromUri = () => {
   const { href } = location;
@@ -19,11 +20,52 @@ const handleChange = set => () => {
   set(value);
 };
 
+const Member = ({ groupId, id, index, member: { name } }) => {
+  const even = index + (1 % 2) === 0 ? 'even' : '';
+  const path = `/groups/${groupId}/members/${id}/`;
+
+  return (
+    <tr className={`${even}`}>
+      <Link path={path}>
+        <td>{index + 1}</td>
+        <td>{name}</td>
+      </Link>
+    </tr>
+  );
+};
+
+const Members = ({ groupId, membersIds, users }) => {
+  return (
+    membersIds && (
+      <div>
+        <h3>Members:</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          {membersIds.map((memberId, index) => (
+            <Member
+              groupId={groupId}
+              id={memberId}
+              index={index}
+              key={memberId}
+              member={users[memberId]}
+            />
+          ))}
+        </table>
+      </div>
+    )
+  );
+};
+
 const Group = ({ groups, users }) => {
   const id = getIdFromUri();
   const {
     name: sourceName,
-    members,
+    members: sourceMembersIds,
     description: sourceDescription = ''
   } = groups[id];
 
@@ -48,7 +90,7 @@ const Group = ({ groups, users }) => {
           <span>Description:</span>
           <textarea onChange={onChangeDescription} value={description} />
         </div>
-        {/* <Members /> */}
+        <Members groupId={id} membersIds={sourceMembersIds} users={users} />
       </form>
       <button>save</button>
     </div>
