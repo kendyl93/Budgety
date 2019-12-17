@@ -17,6 +17,11 @@ const handleChange = set => () => {
   set(value);
 };
 
+const Avatar = ({ name }) => (
+  <div className="avatar-box">
+    <span>{name.charAt(0).toUpperCase()}</span>
+  </div>
+);
 const Group = ({ groups, users }) => {
   const id = getIdFromUri();
   const {
@@ -33,6 +38,10 @@ const Group = ({ groups, users }) => {
 
   return (
     <div className="single-group row-spacing">
+      <div className="avatar-wrapper">
+        <Avatar name={name} />
+        <h1>{name}</h1>
+      </div>
       <form className="row-spacing">
         <div className="form-element">
           <span>Name:</span>

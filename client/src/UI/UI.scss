@@ -34,3 +34,17 @@
     }
   }
 }
+
+.avatar-box {
+  border: solid 1px gray;
+  border-radius: 40px;
+  width: 164px;
+  height: 164px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 64px;
+  }
+}
