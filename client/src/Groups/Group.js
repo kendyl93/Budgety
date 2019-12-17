@@ -32,7 +32,7 @@ const Group = ({ groups, users }) => {
   const onChangeDescription = handleChange(setDescription);
 
   return (
-    <div className="single-group">
+    <div className="single-group row-spacing">
       <form className="row-spacing">
         <div className="form-element">
           <span>Name:</span>
@@ -44,6 +44,7 @@ const Group = ({ groups, users }) => {
         </div>
         {/* <Members /> */}
       </form>
+      <button>save</button>
     </div>
   );
 };

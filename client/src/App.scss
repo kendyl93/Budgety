@@ -35,6 +35,25 @@ a {
   }
 }
 
+button {
+  background: #00a8e8;
+  border-radius: 8px;
+  min-height: 34px;
+  min-width: 72px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  border: #00a8e8;
+  line-height: 34px;
+  @include transition;
+
+  &:hover {
+    background: #6fcdff;
+    border-color: #6fcdff;
+    cursor: pointer;
+  }
+}
+
 svg {
   fill: $textColor;
   @include transition;
