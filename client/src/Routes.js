@@ -9,15 +9,26 @@ import Groups from './Groups/Groups';
 import Group from './Groups/Group';
 
 //passing props needs to be improved!
-const Routes = props => (
-  <Switch>
-    <Route component={() => <Dashboard {...props} />} exact path="/" />
-    <Route component={() => <Groups {...props} />} exact path="/groups" />
-    <Route component={() => <Group {...props} />} exact path="/groups/:id" />
-    <Route component={Expences} exact path="/expences" />
-    <Route component={Edit} path="/expences/edit/:id" />
-    <Route component={Create} path="/expences/create" />
-  </Switch>
-);
+const Routes = props => {
+  const {
+    allData: { groups, users }
+  } = props;
+
+  console.log({ location, props });
+  return (
+    <Switch>
+      <Route component={() => <Dashboard {...props} />} exact path="/" />
+      <Route component={() => <Groups {...props} />} exact path="/groups" />
+      <Route
+        component={() => <Group groups={groups} users={users} />}
+        exact
+        path="/groups/:id"
+      />
+      <Route component={Expences} exact path="/expences" />
+      <Route component={Edit} path="/expences/edit/:id" />
+      <Route component={Create} path="/expences/create" />
+    </Switch>
+  );
+};
 
 export default Routes;
