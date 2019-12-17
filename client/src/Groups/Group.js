@@ -32,10 +32,16 @@ const Group = ({ groups, users }) => {
   const onChangeDescription = handleChange(setDescription);
 
   return (
-    <div className="group">
-      <form>
-        <input onChange={onChangeName} value={name} />
-        <textarea onChange={onChangeDescription} value={description} />
+    <div className="single-group">
+      <form className="row-spacing">
+        <div className="form-element">
+          <span>Name:</span>
+          <input onChange={onChangeName} value={name} />
+        </div>
+        <div className="form-element">
+          <span>Description:</span>
+          <textarea onChange={onChangeDescription} value={description} />
+        </div>
         {/* <Members /> */}
       </form>
     </div>

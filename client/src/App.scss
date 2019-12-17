@@ -53,3 +53,45 @@ img {
   width: auto;
   padding: 0 8px;
 }
+
+.main-container {
+  width: 100%;
+  padding-top: 60px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  .form-element {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-size: 14px;
+      padding-bottom: 4px;
+    }
+  }
+
+  input,
+  textarea {
+    border-radius: 8px;
+    border: solid 1px lightgray;
+    background: #fafafa;
+    padding: 8px;
+
+    &:focus {
+      box-shadow: 0 0 0 2px #88b8ff;
+      border-radius: 8px;
+    }
+  }
+
+  input {
+    min-height: 32px;
+    line-height: 32px;
+  }
+
+  textarea {
+    min-height: 160px;
+  }
+}
