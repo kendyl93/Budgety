@@ -8,6 +8,7 @@ import Dashboard from './Dashboard/Dashboard';
 import Groups from './Groups/Groups';
 import Group from './Groups/Group';
 import Member from './Members/Member';
+import Invite from './Members/Invite';
 
 //passing props needs to be improved!
 const Routes = props => {
@@ -25,6 +26,11 @@ const Routes = props => {
         exact
         path="/groups/:groupId"
       />
+      <Route
+        component={() => <Invite {...props} />}
+        exact
+        path="/groups/:groupId/members/new"
+      />{' '}
       <Route
         component={() => <Member {...props} />}
         exact

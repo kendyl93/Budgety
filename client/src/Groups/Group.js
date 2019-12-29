@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
 
-const getIdFromUri = () => {
+export const getIdFromUri = () => {
   const { href } = location;
   const splittedHref = href.split('/');
-  const lastSplittedHrefElement = splittedHref.length - 1;
-  const id = splittedHref[lastSplittedHrefElement];
+  const groupIdIndex = splittedHref.indexOf('groups') + 1;
+  const id = splittedHref[groupIdIndex];
 
   return id;
 };
@@ -75,7 +75,7 @@ const Group = ({ groups, users }) => {
   const onChangeName = handleChange(setName);
   const onChangeDescription = handleChange(setDescription);
 
-  const path = `/groups/${id}/new/`;
+  const path = `/groups/${id}/members/new/`;
 
   return (
     <div className="single-group row-spacing">

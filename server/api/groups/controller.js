@@ -80,3 +80,21 @@ export const create = async (req, res) => {
 
   res.sendStatus(200);
 };
+
+export const update = async (req, res) => {
+  const { body } = req;
+  const { user: { email = '' } = {} } = body;
+
+  try {
+    console.log('@@@@@@@@@@@@');
+    console.log('@@@@@@@@@@@@');
+    console.log({ body });
+    console.log('@@@@@@@@@@@@');
+    console.log('@@@@@@@@@@@@');
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+
+  res.sendStatus(200);
+};
