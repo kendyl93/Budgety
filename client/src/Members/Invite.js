@@ -19,6 +19,10 @@ const onInvite = async data => {
   }
 };
 
+const replaceLocationWithPath = path => {
+  window.location = `#${path}`;
+};
+
 const Invite = ({ allData: { currentUser, groups } }) => {
   const [email, setEmail] = useState('');
 
@@ -30,11 +34,14 @@ const Invite = ({ allData: { currentUser, groups } }) => {
   };
   const groupId = getIdFromUri();
   const { name: groupName } = groups[groupId] || {};
-  const path = `groups/${groupId}`; // NEEDS TO BE FIXED
+  const path = `groups/${groupId}`;
 
   return (
     <div>
-      <h1>Invite member to {<Link path={path}>{groupName}</Link>}</h1>
+      <h1>
+        Invite member to
+        {<div onClick={() => replaceLocationWithPath(path)}>{groupName}</div>}
+      </h1>
       <form
         onSubmit={() => {
           currentUser && onInvite({ user: currentUser, email });
