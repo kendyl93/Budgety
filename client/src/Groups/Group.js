@@ -34,11 +34,11 @@ const Member = ({ groupId, id, index, member: { name } }) => {
   );
 };
 
-const Members = ({ groupId, membersIds, users }) => {
+const Members = ({ invited, groupId, membersIds, users }) => {
   return (
     membersIds && (
       <div>
-        <h3>Members:</h3>
+        <h3>{invited ? 'Invited' : 'Members'}:</h3>
         <table>
           <thead>
             <tr>
@@ -66,6 +66,7 @@ const Group = ({ groups, users }) => {
   const {
     name: sourceName,
     members: sourceMembersIds,
+    invited: sourceInvitedIds,
     description: sourceDescription = ''
   } = groups[id];
 
@@ -93,6 +94,12 @@ const Group = ({ groups, users }) => {
           <textarea onChange={onChangeDescription} value={description} />
         </div>
         <Members groupId={id} membersIds={sourceMembersIds} users={users} />
+        <Members
+          groupId={id}
+          invited
+          membersIds={sourceInvitedIds}
+          users={users}
+        />
       </form>
       <div className="buttons-inline col-spacing">
         <Link path={path}>invite</Link>
