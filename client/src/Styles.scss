@@ -15,3 +15,8 @@
 @mixin transition {
   transition: all 0.25s ease-in-out;
 }
+
+.buttons-inline {
+  display: flex;
+  flex-direction: row;
+}

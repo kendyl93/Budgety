@@ -75,6 +75,8 @@ const Group = ({ groups, users }) => {
   const onChangeName = handleChange(setName);
   const onChangeDescription = handleChange(setDescription);
 
+  const path = `/groups/${id}/new/`;
+
   return (
     <div className="single-group row-spacing">
       <div className="avatar-wrapper">
@@ -92,7 +94,10 @@ const Group = ({ groups, users }) => {
         </div>
         <Members groupId={id} membersIds={sourceMembersIds} users={users} />
       </form>
-      <button>save</button>
+      <div className="buttons-inline col-spacing">
+        <Link path={path}>invite</Link>
+        <button>save</button>
+      </div>
     </div>
   );
 };
