@@ -98,6 +98,9 @@ export const update = async (req, res) => {
     });
     groupToUpdate.invited = [...groupToUpdate.invited, userToInvite];
     await groupToUpdate.save();
+
+    userToInvite.groupsInvitedTo = [...userToInvite.groupsInvitedTo, groupId];
+    await userToInvite.save();
     console.log('@@@@@@@@@@@@');
     console.log('@@@@@@@@@@@@');
   } catch (error) {

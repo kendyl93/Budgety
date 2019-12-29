@@ -20,7 +20,7 @@ const handleChange = set => () => {
   set(value);
 };
 
-const Member = ({ groupId, id, index, member: { name } }) => {
+const Member = ({ groupId, id, index, member: { name } = {} }) => {
   const even = index + (1 % 2) === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${id}/`;
 
@@ -34,7 +34,7 @@ const Member = ({ groupId, id, index, member: { name } }) => {
   );
 };
 
-const Members = ({ invited, groupId, membersIds, users }) => {
+const Members = ({ invited = false, groupId, membersIds, users }) => {
   return (
     membersIds && (
       <div>

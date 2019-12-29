@@ -5,13 +5,13 @@ import Link from '../UI/Link';
 const GroupMembers = ({ members, users }) => (
   <div>
     {members.map(member => {
-      const { name } = users[member];
+      const { name = '' } = users[member] || {};
       return <div key={member}>{name}</div>;
     })}
   </div>
 );
 
-const Group = ({ name, id, members, users }) => {
+const Group = ({ name = '', id, members, users }) => {
   const path = `/groups/${id}`;
 
   return (
@@ -27,10 +27,13 @@ const Group = ({ name, id, members, users }) => {
   );
 };
 
-const GroupList = ({ groups, currentUser, users }) => {
-  const userGroupsIds = currentUser.groupsMember;
-
+export const GroupList = ({ invited = false, groups, currentUser, users }) => {
+  const userGroupsIds = invited
+    ? currentUser.groupsInvitedTo
+    : currentUser.groupsMember;
+  console.log({ userGroupsIds });
   return userGroupsIds.map(groupId => {
+    console.log({ groups, currentUser, users });
     const { name, members = [] } = groups[groupId];
 
     return (
