@@ -6,8 +6,8 @@ import { getIdFromUri } from '../Groups/Group';
 const update = data => {
   const groupId = getIdFromUri();
   const path = `groups/${groupId}`;
-
-  return putRequest(path, data);
+  console.log({ data, groupId });
+  return putRequest(path, { ...data, groupId });
 };
 
 const onInvite = async data => {

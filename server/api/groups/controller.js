@@ -83,12 +83,19 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
   const { body } = req;
-  const { user: { email = '' } = {} } = body;
+  const { user, email = '', groupId } = body;
 
   try {
+    const userToInvite = await User.findOne({ email });
+    const groupToUpdate = await Group.findOne({ _id: groupId });
     console.log('@@@@@@@@@@@@');
     console.log('@@@@@@@@@@@@');
-    console.log({ body });
+    console.log({
+      emailOOO: email,
+      groupIDOOO: groupId,
+      userToInvite,
+      groupToUpdate
+    });
     console.log('@@@@@@@@@@@@');
     console.log('@@@@@@@@@@@@');
   } catch (error) {
