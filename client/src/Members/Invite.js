@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { putRequest } from '../api';
 import { getIdFromUri } from '../Groups/Group';
-import Link from '../UI/Link';
 
 const update = data => {
   const groupId = getIdFromUri();
