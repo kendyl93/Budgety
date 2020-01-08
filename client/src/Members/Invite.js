@@ -22,6 +22,17 @@ const replaceLocationWithPath = path => {
   window.location = `#${path}`;
 };
 
+const InlineButton = ({ children, onClick, ...rest }) => {
+  const { path } = rest;
+  const onButtonClick = () => onClick(path);
+
+  return (
+    <span className="inline-button" onClick={onButtonClick}>
+      {children}
+    </span>
+  );
+};
+
 const Invite = ({ allData: { currentUser, groups } }) => {
   const [email, setEmail] = useState('');
 
@@ -38,8 +49,10 @@ const Invite = ({ allData: { currentUser, groups } }) => {
   return (
     <div>
       <h1>
-        Invite member to
-        {<div onClick={() => replaceLocationWithPath(path)}>{groupName}</div>}
+        Invite member to{' '}
+        <InlineButton onClick={replaceLocationWithPath} path={path}>
+          {groupName}
+        </InlineButton>
       </h1>
       <form
         onSubmit={() => {
