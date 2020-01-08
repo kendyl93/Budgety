@@ -55,11 +55,19 @@ const Invite = ({ allData: { currentUser, groups } }) => {
         </InlineButton>
       </h1>
       <form
+        className="row-spacing"
         onSubmit={() => {
           currentUser && onInvite({ user: currentUser, email });
         }}
       >
-        <input onChange={onEmailChange} type="email" />
+        <div className="field">
+          <label>Email</label>
+          <input
+            onChange={onEmailChange}
+            placeholder="john.doe@domain.com"
+            type="email"
+          />
+        </div>
         <input type="submit" value="invite" />
       </form>
     </div>

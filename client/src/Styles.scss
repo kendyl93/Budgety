@@ -29,3 +29,22 @@
     opacity: 0.9;
   }
 }
+
+input[type='submit'] {
+  min-width: 96px;
+  width: fit-content;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: $blue;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
