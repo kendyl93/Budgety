@@ -22,4 +22,10 @@
 }
 
 .inline-button {
+  color: $blue;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
 }
