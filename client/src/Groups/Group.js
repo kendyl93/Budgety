@@ -21,45 +21,45 @@ const handleChange = set => () => {
 };
 
 const Member = ({ groupId, id, index, member: { name } = {} }) => {
-  const even = index + (1 % 2) === 0 ? 'even' : '';
+  const even = index % 2 === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${id}/`;
 
   return (
     <tr className={`${even}`}>
       <Link path={path}>
-        <td>{index + 1}</td>
+        <td>{index}</td>
         <td>{name}</td>
       </Link>
     </tr>
   );
 };
 
-const Members = ({ invited = false, groupId, membersIds, users }) => {
-  return (
-    membersIds && (
-      <div>
-        <h3>{invited ? 'Invited' : 'Members'}:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          {membersIds.map((memberId, index) => (
+const Members = ({ invited = false, groupId, membersIds = [], users }) =>
+  membersIds && (
+    <div>
+      <h3>{invited ? 'Invited' : 'Members'}:</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        {membersIds.map((memberId, index) => {
+          const indexToDisplay = index + 1;
+          return (
             <Member
               groupId={groupId}
               id={memberId}
-              index={index}
+              index={indexToDisplay}
               key={memberId}
               member={users[memberId]}
             />
-          ))}
-        </table>
-      </div>
-    )
+          );
+        })}
+      </table>
+    </div>
   );
-};
 
 const Group = ({ groups, users }) => {
   const id = getIdFromUri();
@@ -86,8 +86,10 @@ const Group = ({ groups, users }) => {
       </div>
       <form className="row-spacing">
         <div className="form-element">
-          <span>Name:</span>
-          <input onChange={onChangeName} value={name} />
+          <div className="field">
+            <label>Name:</label>
+            <input onChange={onChangeName} value={name} />
+          </div>
         </div>
         <div className="form-element">
           <span>Description:</span>
