@@ -59,7 +59,7 @@ const Members = ({
   membersIds,
   users,
   currentUser
-}) => {
+}) =>
   membersIds && (
     <div>
       <h3>{invited ? 'Invited' : 'Members'}:</h3>
@@ -87,7 +87,6 @@ const Members = ({
       </table>
     </div>
   );
-};
 
 const Group = ({ groups, users, currentUser }) => {
   const id = getIdFromUri();
