@@ -27,24 +27,40 @@ const handleChange = set => () => {
   set(value);
 };
 
-const Member = ({ groupId, id, index, member: { name } = {} }) => {
-  const even = index + (1 % 2) === 0 ? 'even' : '';
+const Member = ({
+  currentUser: { _id: currentUserId },
+  groupId,
+  id,
+  index,
+  member: { name } = {}
+}) => {
+  const even = index % 2 === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${id}/`;
+  const maybeCurrentUser = maybeCurrentUser === id;
 
   return (
     <tr className={`${even}`}>
-      <td>{index + 1}</td>
+      <td>{index}</td>
       <td>
         <Link path={path}>{name} </Link>
       </td>
-      <td>
-        <ActionButtons />
-      </td>
+      {currentUserId === id && (
+        <td>
+          <ActionButtons />
+        </td>
+      )}
     </tr>
   );
 };
 
-const Members = ({ invited = false, groupId, membersIds, users }) => {
+const Members = ({
+  invited = false,
+  groupId,
+  membersIds,
+  users,
+  currentUser
+}) => {
+  console.log({ membersIds });
   return (
     membersIds && (
       <div>
@@ -56,22 +72,28 @@ const Members = ({ invited = false, groupId, membersIds, users }) => {
               <th>Name</th>
             </tr>
           </thead>
-          {membersIds.map((memberId, index) => (
-            <Member
-              groupId={groupId}
-              id={memberId}
-              index={index}
-              key={memberId}
-              member={users[memberId]}
-            />
-          ))}
+          {membersIds.map((memberId, index) => {
+            const displayIndex = index + 1;
+            console.log({ memberId, index });
+
+            return (
+              <Member
+                currentUser={currentUser}
+                groupId={groupId}
+                id={memberId}
+                index={displayIndex}
+                key={memberId}
+                member={users[memberId]}
+              />
+            );
+          })}
         </table>
       </div>
     )
   );
 };
 
-const Group = ({ groups, users }) => {
+const Group = ({ groups, users, currentUser }) => {
   const id = getIdFromUri();
   const {
     name: sourceName,
@@ -105,8 +127,14 @@ const Group = ({ groups, users }) => {
           <span>Description:</span>
           <textarea onChange={onChangeDescription} value={description} />
         </div>
-        <Members groupId={id} membersIds={sourceMembersIds} users={users} />
         <Members
+          currentUser={currentUser}
+          groupId={id}
+          membersIds={sourceMembersIds}
+          users={users}
+        />
+        <Members
+          currentUser={currentUser}
           groupId={id}
           invited
           membersIds={sourceInvitedIds}
