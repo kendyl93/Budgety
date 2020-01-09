@@ -34,7 +34,7 @@ const Member = ({ groupId, id, index, member: { name } = {} }) => {
   );
 };
 
-const Members = ({ invited = false, groupId, membersIds = [], users }) =>
+const Members = ({ invited = false, groupId, membersIds, users }) =>
   membersIds && (
     <div>
       <h3>{invited ? 'Invited' : 'Members'}:</h3>
@@ -47,6 +47,7 @@ const Members = ({ invited = false, groupId, membersIds = [], users }) =>
         </thead>
         {membersIds.map((memberId, index) => {
           const indexToDisplay = index + 1;
+
           return (
             <Member
               groupId={groupId}
