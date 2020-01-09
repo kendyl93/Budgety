@@ -39,12 +39,12 @@ const Member = ({
   const maybeCurrentUser = maybeCurrentUser === id;
 
   return (
-    <tr className={`${even}`}>
+    <tr className={even}>
       <td>{index}</td>
       <td>
         <Link path={path}>{name} </Link>
       </td>
-      {currentUserId === id && (
+      {maybeCurrentUser && (
         <td>
           <ActionButtons />
         </td>
@@ -60,36 +60,32 @@ const Members = ({
   users,
   currentUser
 }) => {
-  console.log({ membersIds });
-  return (
-    membersIds && (
-      <div>
-        <h3>{invited ? 'Invited' : 'Members'}:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          {membersIds.map((memberId, index) => {
-            const displayIndex = index + 1;
-            console.log({ memberId, index });
+  membersIds && (
+    <div>
+      <h3>{invited ? 'Invited' : 'Members'}:</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        {membersIds.map((memberId, index) => {
+          const displayIndex = index + 1;
 
-            return (
-              <Member
-                currentUser={currentUser}
-                groupId={groupId}
-                id={memberId}
-                index={displayIndex}
-                key={memberId}
-                member={users[memberId]}
-              />
-            );
-          })}
-        </table>
-      </div>
-    )
+          return (
+            <Member
+              currentUser={currentUser}
+              groupId={groupId}
+              id={memberId}
+              index={displayIndex}
+              key={memberId}
+              member={users[memberId]}
+            />
+          );
+        })}
+      </table>
+    </div>
   );
 };
 
