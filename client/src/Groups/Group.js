@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
 
+const ActionButtons = () => <div className="action-buttons">btn</div>;
+
 export const getIdFromUri = () => {
   const { href } = location;
   const splittedHref = href.split('/');
@@ -29,6 +31,9 @@ const Member = ({ groupId, id, index, member: { name } = {} }) => {
       <td>{index + 1}</td>
       <td>
         <Link path={path}>{name} </Link>
+      </td>
+      <td>
+        <ActionButtons></ActionButtons>
       </td>
     </tr>
   );
