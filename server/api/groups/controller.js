@@ -84,7 +84,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
   const { body } = req;
   const { user, email = '', groupId } = body;
-
+  //TODO: detect what changes user is trying to do and make them properly
   try {
     const userToInvite = await User.findOne({ email });
     const groupToUpdate = await Group.findOne({ _id: groupId });

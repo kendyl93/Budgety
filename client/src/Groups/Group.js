@@ -36,7 +36,7 @@ const Member = ({
 }) => {
   const even = index % 2 === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${id}/`;
-  const maybeCurrentUser = maybeCurrentUser === id;
+  const maybeCurrentUser = currentUserId === id;
 
   return (
     <tr className={even}>
