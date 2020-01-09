@@ -26,10 +26,10 @@ const Member = ({ groupId, id, index, member: { name } = {} }) => {
 
   return (
     <tr className={`${even}`}>
-      <Link path={path}>
-        <td>{index + 1}</td>
-        <td>{name}</td>
-      </Link>
+      <td>{index + 1}</td>
+      <td>
+        <Link path={path}>{name} </Link>
+      </td>
     </tr>
   );
 };
@@ -78,6 +78,8 @@ const Group = ({ groups, users }) => {
 
   const path = `/groups/${id}/members/new/`;
 
+  const maybeAlreadyMember = false;
+
   return (
     <div className="single-group row-spacing">
       <div className="avatar-wrapper">
@@ -101,10 +103,12 @@ const Group = ({ groups, users }) => {
           users={users}
         />
       </form>
-      <div className="buttons-inline col-spacing">
-        <Link path={path}>invite</Link>
-        <button>save</button>
-      </div>
+      {maybeAlreadyMember && (
+        <div className="buttons-inline col-spacing">
+          <Link path={path}>invite</Link>
+          <button>save</button>
+        </div>
+      )}
     </div>
   );
 };
