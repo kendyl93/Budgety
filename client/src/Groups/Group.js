@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 
 import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
+import { Done as AcceptIcon } from '../UI/icons';
 
-const ActionButtons = () => <div className="action-buttons">btn</div>;
+const ActionButtons = () => (
+  <div className="action-buttons">
+    <AcceptIcon className="accept-icon" />
+  </div>
+);
 
 export const getIdFromUri = () => {
   const { href } = location;
@@ -33,7 +38,7 @@ const Member = ({ groupId, id, index, member: { name } = {} }) => {
         <Link path={path}>{name} </Link>
       </td>
       <td>
-        <ActionButtons></ActionButtons>
+        <ActionButtons />
       </td>
     </tr>
   );

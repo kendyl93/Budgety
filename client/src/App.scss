@@ -163,3 +163,16 @@ table {
 .action-buttons {
   display: flex;
 }
+
+.accept-icon {
+  border: saddlebrown;
+  background: green;
+  fill: #fff;
+  border-radius: 50%;
+  padding: 2px;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
