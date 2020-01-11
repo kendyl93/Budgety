@@ -6,6 +6,8 @@ const User = require('../users/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
 
+const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
+
 const getCurrentUserId = async req => {
   const accessTokenCookie =
     req && req.cookies && req.cookies[ACCESS_TOKEN_COOKIE_NAME];
@@ -86,26 +88,58 @@ export const update = async (req, res) => {
     body,
     params: { id: groupId }
   } = req;
-  const { user, email = '', action, memberId } = body;
+  const { user, email = '', action } = body;
+  const { ACCEPT, INVITE, REJECT } = ACTIONS;
   //TODO: detect what changes user is trying to do and make them properly
   try {
-    const userToInvite = await User.findOne({ email });
+    const userToUpdate = await User.findOne({ email });
     const groupToUpdate = await Group.findOne({ _id: groupId });
     console.log('@@@@@@@@@@@@');
     console.log('@@@@@@@@@@@@');
     console.log({
-      memberId,
       action,
       email,
       groupId,
-      userToInvite,
+      userToUpdate,
       groupToUpdate
     });
-    groupToUpdate.invited = [...groupToUpdate.invited, userToInvite];
-    await groupToUpdate.save();
 
-    userToInvite.groupsInvitedTo = [...userToInvite.groupsInvitedTo, groupId];
-    await userToInvite.save();
+    switch (action) {
+      case ACCEPT:
+        console.log({ B: 'accept' });
+        try {
+          groupToUpdate.members = [...groupToUpdate.members, userToUpdate._id];
+          groupToUpdate.invited = [
+            ...groupToUpdate.invited.filter(elem => elem !== userToUpdate._id)
+          ];
+
+          await groupToUpdate.save();
+          userToUpdate.groupsMember = [...userToUpdate.groupsMember, groupId];
+          return await userToUpdate.save();
+        } catch (error) {
+          console.error({ error });
+        }
+        break;
+      case INVITE:
+        console.log({ B: 'invite' });
+        try {
+          groupToUpdate.invited = [...groupToUpdate.invited, userToUpdate];
+          await groupToUpdate.save();
+
+          userToUpdate.groupsInvitedTo = [
+            ...userToUpdate.groupsInvitedTo,
+            groupId
+          ];
+          return await userToUpdate.save();
+        } catch (error) {
+          console.error({ error });
+        }
+        break;
+      case REJECT:
+        console.log({ C: 'reject' });
+        break;
+    }
+
     console.log('@@@@@@@@@@@@');
     console.log('@@@@@@@@@@@@');
   } catch (error) {

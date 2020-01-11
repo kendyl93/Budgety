@@ -7,12 +7,12 @@ import { putRequest } from '../api';
 
 const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
 
-const ActionButtons = ({ groupId, memberId }) => (
+const ActionButtons = ({ groupId, email }) => (
   <div className="action-buttons">
     <AcceptIcon
       className="accept-icon"
       onClick={() =>
-        putRequest(`groups/${groupId}`, { memberId, action: ACTIONS.ACCEPT })
+        putRequest(`groups/${groupId}`, { email, action: ACTIONS.ACCEPT })
       }
     />
   </div>
@@ -40,7 +40,7 @@ const Member = ({
   groupId,
   id: memberId,
   index,
-  member: { name } = {}
+  member: { name, email } = {}
 }) => {
   const even = index % 2 === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${memberId}/`;
@@ -52,9 +52,10 @@ const Member = ({
       <td>
         <Link path={path}>{name}</Link>
       </td>
+      <td>{email}</td>
       {maybeCurrentUser && (
         <td>
-          <ActionButtons groupId={groupId} memberId={memberId} />
+          <ActionButtons email={email} groupId={groupId} />
         </td>
       )}
     </tr>
