@@ -83,65 +83,108 @@ export const create = async (req, res) => {
   res.sendStatus(200);
 };
 
+const filterElementOut = array => element =>
+  array.filter(arrayElement => arrayElement !== element);
+
+const preventDuplicates = array => [...new Set(array)];
+
+const saveGroupOnInvitationAccepted = async (userToUpdate, groupToUpdate) => {
+  const { members, invited } = groupToUpdate;
+  const { _id: userToUpdateId } = userToUpdate;
+
+  const uniqueUpdatedMembers = preventDuplicates([...members, userToUpdateId]);
+  groupToUpdate.members = [...uniqueUpdatedMembers];
+
+  const uniqueUpdatedInvited = preventDuplicates(
+    filterElementOut(invited)(userToUpdateId)
+  );
+  groupToUpdate.invited = [...uniqueUpdatedInvited];
+
+  await groupToUpdate.save();
+};
+
+const saveUserOnInvitationAccepted = async (userToUpdate, groupToUpdate) => {
+  const { _id: groupToUpdateId } = groupToUpdate;
+  const { groupsMember, groupsInvitedTo } = userToUpdate;
+
+  const uniqueUpdatedGroupsMember = preventDuplicates([
+    ...groupsMember,
+    groupToUpdateId
+  ]);
+  // eslint-disable-next-line require-atomic-updates
+  userToUpdate.groupsMember = [...uniqueUpdatedGroupsMember];
+
+  const uniqueUpdatedGroupsInvitedTo = preventDuplicates(
+    filterElementOut(groupsInvitedTo)(groupToUpdateId)
+  );
+  // eslint-disable-next-line require-atomic-updates
+  userToUpdate.groupsInvitedTo = [...uniqueUpdatedGroupsInvitedTo];
+
+  await userToUpdate.save();
+};
+
+const acceptInvitaion = async (userToUpdate, groupToUpdate) => {
+  try {
+    await Promise.all([
+      saveGroupOnInvitationAccepted(userToUpdate, groupToUpdate),
+      saveUserOnInvitationAccepted(userToUpdate, groupToUpdate)
+    ]);
+
+    return;
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+const invite = async (groupToUpdate, userToUpdate) => {
+  try {
+    const { invited, _id: groupToUpdateId } = groupToUpdate;
+    const { groupsInvitedTo } = userToUpdate;
+
+    const uniqueInvited = preventDuplicates([...invited, userToUpdate]);
+    groupToUpdate.invited = [...uniqueInvited];
+    await groupToUpdate.save();
+
+    const uniqueGroupsInvitedTo = preventDuplicates([
+      ...groupsInvitedTo,
+      groupToUpdateId
+    ]);
+    // eslint-disable-next-line require-atomic-updates
+    userToUpdate.groupsInvitedTo = [...uniqueGroupsInvitedTo];
+
+    return await userToUpdate.save();
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
 export const update = async (req, res) => {
   const {
     body,
     params: { id: groupId }
   } = req;
-  const { user, email = '', action } = body;
+  const { email = '', action } = body;
   const { ACCEPT, INVITE, REJECT } = ACTIONS;
   //TODO: detect what changes user is trying to do and make them properly
   try {
     const userToUpdate = await User.findOne({ email });
     const groupToUpdate = await Group.findOne({ _id: groupId });
-    console.log('@@@@@@@@@@@@');
-    console.log('@@@@@@@@@@@@');
-    console.log({
-      action,
-      email,
-      groupId,
-      userToUpdate,
-      groupToUpdate
-    });
 
     switch (action) {
       case ACCEPT:
-        console.log({ B: 'accept' });
-        try {
-          groupToUpdate.members = [...groupToUpdate.members, userToUpdate._id];
-          groupToUpdate.invited = [
-            ...groupToUpdate.invited.filter(elem => elem !== userToUpdate._id)
-          ];
-
-          await groupToUpdate.save();
-          userToUpdate.groupsMember = [...userToUpdate.groupsMember, groupId];
-          return await userToUpdate.save();
-        } catch (error) {
-          console.error({ error });
-        }
+        await acceptInvitaion(userToUpdate, groupToUpdate);
+        console.log('Invitation accepted');
         break;
       case INVITE:
-        console.log({ B: 'invite' });
-        try {
-          groupToUpdate.invited = [...groupToUpdate.invited, userToUpdate];
-          await groupToUpdate.save();
-
-          userToUpdate.groupsInvitedTo = [
-            ...userToUpdate.groupsInvitedTo,
-            groupId
-          ];
-          return await userToUpdate.save();
-        } catch (error) {
-          console.error({ error });
-        }
+        await invite();
+        console.log('Invitation sent');
         break;
       case REJECT:
-        console.log({ C: 'reject' });
+        console.log({ C: 'Currently reject the member is not possible' });
         break;
     }
 
-    console.log('@@@@@@@@@@@@');
-    console.log('@@@@@@@@@@@@');
+    return res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
