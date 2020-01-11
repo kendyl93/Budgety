@@ -3,10 +3,18 @@ import React, { useState } from 'react';
 import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
 import { Done as AcceptIcon } from '../UI/icons';
+import { putRequest } from '../api';
 
-const ActionButtons = () => (
+const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
+
+const ActionButtons = ({ groupId, memberId }) => (
   <div className="action-buttons">
-    <AcceptIcon className="accept-icon" />
+    <AcceptIcon
+      className="accept-icon"
+      onClick={() =>
+        putRequest(`groups/${groupId}`, { memberId, action: ACTIONS.ACCEPT })
+      }
+    />
   </div>
 );
 
@@ -30,23 +38,23 @@ const handleChange = set => () => {
 const Member = ({
   currentUser: { _id: currentUserId },
   groupId,
-  id,
+  id: memberId,
   index,
   member: { name } = {}
 }) => {
   const even = index % 2 === 0 ? 'even' : '';
-  const path = `/groups/${groupId}/members/${id}/`;
-  const maybeCurrentUser = currentUserId === id;
-
+  const path = `/groups/${groupId}/members/${memberId}/`;
+  const maybeCurrentUser = currentUserId === memberId;
+  console.log({ groupId });
   return (
     <tr className={even}>
       <td>{index}</td>
       <td>
-        <Link path={path}>{name} </Link>
+        <Link path={path}>{name}</Link>
       </td>
       {maybeCurrentUser && (
         <td>
-          <ActionButtons />
+          <ActionButtons groupId={groupId} memberId={memberId} />
         </td>
       )}
     </tr>
