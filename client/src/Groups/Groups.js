@@ -25,7 +25,7 @@ export const GroupList = ({ invited = false, groups, currentUser, users }) => {
     : currentUser.groupsMember;
 
   return userGroupsIds.map(groupId => {
-    const { name, members = [] } = groups[groupId];
+    const { name, members = [] } = groups[groupId] || {};
 
     return (
       <Group
