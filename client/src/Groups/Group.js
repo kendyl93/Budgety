@@ -31,6 +31,7 @@ const Group = ({ groups, users, currentUser }) => {
     invited: sourceInvitedIds,
     description: sourceDescription = ''
   } = groups[id];
+  const { _id: currentUserId } = currentUser;
 
   const [name, setName] = useState(sourceName);
   const [description, setDescription] = useState(sourceDescription);
@@ -40,7 +41,7 @@ const Group = ({ groups, users, currentUser }) => {
 
   const path = `/groups/${id}/members/new/`;
 
-  const maybeAlreadyMember = true;
+  const maybeAlreadyMember = sourceMembersIds.includes(currentUserId);
   const maybeInvitedUsers = any(sourceInvitedIds);
 
   return (
