@@ -4,6 +4,7 @@ import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
 import { Done as AcceptIcon } from '../UI/icons';
 import { putRequest } from '../api';
+import { any } from '../array';
 
 const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
 
@@ -37,6 +38,7 @@ const handleChange = set => () => {
 
 const Member = ({
   currentUser: { _id: currentUserId },
+  invited,
   groupId,
   id: memberId,
   index,
@@ -45,7 +47,7 @@ const Member = ({
   const even = index % 2 === 0 ? 'even' : '';
   const path = `/groups/${groupId}/members/${memberId}/`;
   const maybeCurrentUser = currentUserId === memberId;
-  console.log({ groupId });
+
   return (
     <tr className={even}>
       <td>{index}</td>
@@ -53,7 +55,7 @@ const Member = ({
         <Link path={path}>{name}</Link>
       </td>
       <td>{email}</td>
-      {maybeCurrentUser && (
+      {maybeCurrentUser && invited && (
         <td>
           <ActionButtons email={email} groupId={groupId} />
         </td>
@@ -77,6 +79,7 @@ const Members = ({
           <tr>
             <th>#</th>
             <th>Name</th>
+            <th>e-mail</th>
           </tr>
         </thead>
         {membersIds.map((memberId, index) => {
@@ -88,6 +91,7 @@ const Members = ({
               groupId={groupId}
               id={memberId}
               index={displayIndex}
+              invited={invited}
               key={memberId}
               member={users[memberId]}
             />
@@ -114,7 +118,8 @@ const Group = ({ groups, users, currentUser }) => {
 
   const path = `/groups/${id}/members/new/`;
 
-  const maybeAlreadyMember = false;
+  const maybeAlreadyMember = true;
+  const maybeInvitedUsers = any(sourceInvitedIds);
 
   return (
     <div className="single-group row-spacing">
@@ -131,26 +136,30 @@ const Group = ({ groups, users, currentUser }) => {
           <span>Description:</span>
           <textarea onChange={onChangeDescription} value={description} />
         </div>
+        <div>
+          <button>save</button>
+        </div>
         <Members
           currentUser={currentUser}
           groupId={id}
           membersIds={sourceMembersIds}
           users={users}
         />
-        <Members
-          currentUser={currentUser}
-          groupId={id}
-          invited
-          membersIds={sourceInvitedIds}
-          users={users}
-        />
+        {maybeAlreadyMember && (
+          <div className="pretend-button-wrapper buttons-inline col-spacing">
+            <Link path={path}>invite</Link>
+          </div>
+        )}
+        {maybeInvitedUsers && (
+          <Members
+            currentUser={currentUser}
+            groupId={id}
+            invited
+            membersIds={sourceInvitedIds}
+            users={users}
+          />
+        )}
       </form>
-      {maybeAlreadyMember && (
-        <div className="buttons-inline col-spacing">
-          <Link path={path}>invite</Link>
-          <button>save</button>
-        </div>
-      )}
     </div>
   );
 };

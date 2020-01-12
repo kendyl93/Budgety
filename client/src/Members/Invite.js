@@ -6,7 +6,7 @@ import { getIdFromUri } from '../Groups/Group';
 const update = data => {
   const groupId = getIdFromUri();
   const path = `groups/${groupId}`;
-  console.log({ data, groupId });
+  
   return putRequest(path, { ...data, groupId });
 };
 
