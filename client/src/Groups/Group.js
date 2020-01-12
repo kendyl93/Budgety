@@ -29,8 +29,9 @@ const Group = ({ groups, users, currentUser }) => {
     name: sourceName,
     members: sourceMembersIds,
     invited: sourceInvitedIds,
-    description: sourceDescription = ''
-  } = groups[id];
+    description: sourceDescription = '',
+    owner: ownerId
+  } = groups[id] || {};
   const { _id: currentUserId } = currentUser;
 
   const [name, setName] = useState(sourceName);
@@ -68,6 +69,7 @@ const Group = ({ groups, users, currentUser }) => {
           currentUser={currentUser}
           groupId={id}
           membersIds={sourceMembersIds}
+          ownerId={ownerId}
           users={users}
         />
         {maybeAlreadyMember && (

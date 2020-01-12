@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Done as AcceptIcon } from '../UI/icons';
+import {
+  Done as AcceptIcon,
+  PermContactCalendar as AdminIcon
+} from '../UI/icons';
 import { putRequest } from '../api';
 import Link from '../UI/Link';
 import { ACTIONS } from './actions';
@@ -20,6 +23,7 @@ const ActionButtons = ({ groupId, email }) => {
 };
 
 const Member = ({
+  owner,
   currentUser: { _id: currentUserId },
   invited,
   groupId,
@@ -38,10 +42,16 @@ const Member = ({
         <Link path={path}>{name}</Link>
       </td>
       <td>{email}</td>
-      {maybeCurrentUser && invited && (
+      {maybeCurrentUser && invited ? (
         <td>
           <ActionButtons email={email} groupId={groupId} />
         </td>
+      ) : owner ? (
+        <td>
+          <AdminIcon />
+        </td>
+      ) : (
+        undefined
       )}
     </tr>
   );
