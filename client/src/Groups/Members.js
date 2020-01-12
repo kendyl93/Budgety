@@ -4,9 +4,10 @@ import Member from './Member';
 const TableHeader = () => (
   <thead>
     <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>e-mail</th>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">e-mail</th>
+      <th scope="col">actions</th>
     </tr>
   </thead>
 );
@@ -21,7 +22,7 @@ const Members = ({
   membersIds && (
     <div>
       <h3>{invited ? 'Invited' : 'Members'}:</h3>
-      <table>
+      <table className="table table-striped table-hover">
         <TableHeader />
         {membersIds.map((memberId, index) => {
           const displayIndex = index + 1;

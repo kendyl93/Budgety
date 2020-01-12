@@ -155,8 +155,14 @@ input[type='submit'] {
 }
 
 table {
-  display: flex;
-  flex-direction: column;
+  overflow-x: auto;
+  display: block;
+  table-layout: fixed;
+
+  @media screen and (min-width: $mobile-breakpoint) {
+    overflow-x: hidden;
+    display: table;
+  }
 
   tr {
     th:first-child,
