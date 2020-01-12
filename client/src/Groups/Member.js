@@ -3,8 +3,7 @@ import React from 'react';
 import { Done as AcceptIcon } from '../UI/icons';
 import { putRequest } from '../api';
 import Link from '../UI/Link';
-
-const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
+import { ACTIONS } from './actions';
 
 const ActionButtons = ({ groupId, email }) => {
   const { ACCEPT } = ACTIONS;

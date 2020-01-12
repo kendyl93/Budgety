@@ -102,7 +102,7 @@ export const update = async (req, res) => {
         console.log('Invitation accepted');
         break;
       case INVITE:
-        await invite();
+        await invite(userToUpdate, groupToUpdate);
         console.log('Invitation sent');
         break;
       case REJECT:

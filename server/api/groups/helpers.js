@@ -51,9 +51,9 @@ export const acceptInvitaion = async (userToUpdate, groupToUpdate) => {
   }
 };
 
-export const invite = async (groupToUpdate, userToUpdate) => {
+export const invite = async (userToUpdate, groupToUpdate) => {
   try {
-    const { invited, _id: groupToUpdateId } = groupToUpdate;
+    const { invited = [], _id: groupToUpdateId } = groupToUpdate || {};
     const { groupsInvitedTo } = userToUpdate;
 
     const uniqueInvited = preventDuplicates([...invited, userToUpdate]);
