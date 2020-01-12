@@ -5,6 +5,9 @@ const Group = require('./Model');
 const User = require('../users/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
+import { acceptInvitaion, invite } from './helpers';
+
+const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
 
 const getCurrentUserId = async req => {
   const accessTokenCookie =
@@ -82,27 +85,32 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-  const { body } = req;
-  const { user, email = '', groupId } = body;
+  const {
+    body,
+    params: { id: groupId }
+  } = req;
+  const { email = '', action } = body;
+  const { ACCEPT, INVITE, REJECT } = ACTIONS;
 
   try {
-    const userToInvite = await User.findOne({ email });
+    const userToUpdate = await User.findOne({ email });
     const groupToUpdate = await Group.findOne({ _id: groupId });
-    console.log('@@@@@@@@@@@@');
-    console.log('@@@@@@@@@@@@');
-    console.log({
-      emailOOO: email,
-      groupIDOOO: groupId,
-      userToInvite,
-      groupToUpdate
-    });
-    groupToUpdate.invited = [...groupToUpdate.invited, userToInvite];
-    await groupToUpdate.save();
 
-    userToInvite.groupsInvitedTo = [...userToInvite.groupsInvitedTo, groupId];
-    await userToInvite.save();
-    console.log('@@@@@@@@@@@@');
-    console.log('@@@@@@@@@@@@');
+    switch (action) {
+      case ACCEPT:
+        await acceptInvitaion(userToUpdate, groupToUpdate);
+        console.log('Invitation accepted');
+        break;
+      case INVITE:
+        await invite(userToUpdate, groupToUpdate);
+        console.log('Invitation sent');
+        break;
+      case REJECT:
+        console.log('Currently reject the member is not possible');
+        break;
+    }
+
+    return res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);

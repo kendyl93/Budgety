@@ -13,7 +13,7 @@ import Invite from './Members/Invite';
 //passing props needs to be improved!
 const Routes = props => {
   const {
-    allData: { groups, users }
+    allData: { groups, users, currentUser }
   } = props;
 
   console.log({ location, props });
@@ -22,7 +22,9 @@ const Routes = props => {
       <Route component={() => <Dashboard {...props} />} exact path="/" />
       <Route component={() => <Groups {...props} />} exact path="/groups" />
       <Route
-        component={() => <Group groups={groups} users={users} />}
+        component={() => (
+          <Group currentUser={currentUser} groups={groups} users={users} />
+        )}
         exact
         path="/groups/:groupId"
       />
@@ -30,7 +32,7 @@ const Routes = props => {
         component={() => <Invite {...props} />}
         exact
         path="/groups/:groupId/members/new"
-      />{' '}
+      />
       <Route
         component={() => <Member {...props} />}
         exact

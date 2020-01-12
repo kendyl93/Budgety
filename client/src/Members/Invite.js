@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 
 import { putRequest } from '../api';
 import { getIdFromUri } from '../Groups/Group';
+import { ACTIONS } from '../Groups/actions';
 
 const update = data => {
   const groupId = getIdFromUri();
   const path = `groups/${groupId}`;
-  console.log({ data, groupId });
+
   return putRequest(path, { ...data, groupId });
 };
 
@@ -35,6 +36,7 @@ const InlineButton = ({ children, onClick, ...rest }) => {
 
 const Invite = ({ allData: { currentUser, groups } }) => {
   const [email, setEmail] = useState('');
+  const { INVITE } = ACTIONS;
 
   const onEmailChange = () => {
     const {
@@ -57,7 +59,7 @@ const Invite = ({ allData: { currentUser, groups } }) => {
       <form
         className="row-spacing"
         onSubmit={() => {
-          currentUser && onInvite({ user: currentUser, email });
+          currentUser && onInvite({ user: currentUser, email, action: INVITE });
         }}
       >
         <div className="field">

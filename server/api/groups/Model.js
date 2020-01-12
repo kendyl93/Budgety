@@ -11,9 +11,9 @@ const Group = new Schema({
     required: true
   },
   owner: { type: String, ref: 'Users' },
-  rejected: [[{ type: String, ref: 'Users' }]],
-  invited: [[{ type: String, ref: 'Users' }]],
-  members: [[{ type: String, ref: 'Users' }]]
+  rejected: [{ type: String, ref: 'Users' }],
+  invited: [{ type: String, ref: 'Users' }],
+  members: [{ type: String, ref: 'Users' }]
 });
 
 module.exports = mongoose.model('Groups', Group);

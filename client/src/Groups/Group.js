@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 import Avatar from '../UI/Avatar';
 import Link from '../UI/Link';
+import Members from './Members';
+
+import { any } from '../array';
 
 export const getIdFromUri = () => {
   const { href } = location;
@@ -20,49 +23,7 @@ const handleChange = set => () => {
   set(value);
 };
 
-const Member = ({ groupId, id, index, member: { name } = {} }) => {
-  const even = index % 2 === 0 ? 'even' : '';
-  const path = `/groups/${groupId}/members/${id}/`;
-
-  return (
-    <tr className={`${even}`}>
-      <Link path={path}>
-        <td>{index}</td>
-        <td>{name}</td>
-      </Link>
-    </tr>
-  );
-};
-
-const Members = ({ invited = false, groupId, membersIds, users }) =>
-  membersIds && (
-    <div>
-      <h3>{invited ? 'Invited' : 'Members'}:</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        {membersIds.map((memberId, index) => {
-          const indexToDisplay = index + 1;
-
-          return (
-            <Member
-              groupId={groupId}
-              id={memberId}
-              index={indexToDisplay}
-              key={memberId}
-              member={users[memberId]}
-            />
-          );
-        })}
-      </table>
-    </div>
-  );
-
-const Group = ({ groups, users }) => {
+const Group = ({ groups, users, currentUser }) => {
   const id = getIdFromUri();
   const {
     name: sourceName,
@@ -78,6 +39,9 @@ const Group = ({ groups, users }) => {
   const onChangeDescription = handleChange(setDescription);
 
   const path = `/groups/${id}/members/new/`;
+
+  const maybeAlreadyMember = true;
+  const maybeInvitedUsers = any(sourceInvitedIds);
 
   return (
     <div className="single-group row-spacing">
@@ -96,18 +60,30 @@ const Group = ({ groups, users }) => {
           <span>Description:</span>
           <textarea onChange={onChangeDescription} value={description} />
         </div>
-        <Members groupId={id} membersIds={sourceMembersIds} users={users} />
+        <div>
+          <button>save</button>
+        </div>
         <Members
+          currentUser={currentUser}
           groupId={id}
-          invited
-          membersIds={sourceInvitedIds}
+          membersIds={sourceMembersIds}
           users={users}
         />
+        {maybeAlreadyMember && (
+          <div className="pretend-button-wrapper buttons-inline col-spacing">
+            <Link path={path}>invite</Link>
+          </div>
+        )}
+        {maybeInvitedUsers && (
+          <Members
+            currentUser={currentUser}
+            groupId={id}
+            invited
+            membersIds={sourceInvitedIds}
+            users={users}
+          />
+        )}
       </form>
-      <div className="buttons-inline col-spacing">
-        <Link path={path}>invite</Link>
-        <button>save</button>
-      </div>
     </div>
   );
 };

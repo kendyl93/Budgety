@@ -35,16 +35,22 @@ a {
   }
 }
 
+.pretend-button-wrapper {
+  width: 72px;
+  text-align: center;
+}
+
+.pretend-button-wrapper a,
 button {
   background: #00a8e8;
   border-radius: 8px;
-  min-height: 34px;
+  min-height: 40px;
   min-width: 72px;
   font-size: 18px;
   font-weight: 500;
   color: #fff;
   border: #00a8e8;
-  line-height: 34px;
+  line-height: 40px;
   @include transition;
 
   &:hover {
@@ -112,5 +118,67 @@ form {
 
   textarea {
     min-height: 160px;
+  }
+}
+
+.buttons-inline {
+  display: flex;
+  flex-direction: row;
+}
+
+.inline-button {
+  color: $blue;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
+input[type='submit'] {
+  min-width: 96px;
+  width: fit-content;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: $blue;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  display: flex;
+  flex-direction: column;
+
+  tr {
+    th:first-child,
+    td:first-child {
+      width: 18px;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+}
+
+.accept-icon {
+  border: saddlebrown;
+  background: green;
+  fill: #fff;
+  border-radius: 50%;
+  padding: 2px;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
   }
 }
