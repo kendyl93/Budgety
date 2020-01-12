@@ -5,6 +5,7 @@ const Group = require('./Model');
 const User = require('../users/Model');
 
 import { ACCESS_TOKEN_COOKIE_NAME, COOKIE_SECRET } from '../../environment';
+import { acceptInvitaion, invite } from './helpers';
 
 const ACTIONS = { ACCEPT: 'ACCEPT', REJECT: 'REJECT', INVITE: 'INVITE' };
 
@@ -83,81 +84,6 @@ export const create = async (req, res) => {
   res.sendStatus(200);
 };
 
-const filterElementOut = array => element =>
-  array.filter(arrayElement => arrayElement !== element);
-
-const preventDuplicates = array => [...new Set(array)];
-
-const saveGroupOnInvitationAccepted = async (userToUpdate, groupToUpdate) => {
-  const { members, invited } = groupToUpdate;
-  const { _id: userToUpdateId } = userToUpdate;
-
-  const uniqueUpdatedMembers = preventDuplicates([...members, userToUpdateId]);
-  groupToUpdate.members = [...uniqueUpdatedMembers];
-
-  const uniqueUpdatedInvited = preventDuplicates(
-    filterElementOut(invited)(userToUpdateId)
-  );
-  groupToUpdate.invited = [...uniqueUpdatedInvited];
-
-  await groupToUpdate.save();
-};
-
-const saveUserOnInvitationAccepted = async (userToUpdate, groupToUpdate) => {
-  const { _id: groupToUpdateId } = groupToUpdate;
-  const { groupsMember, groupsInvitedTo } = userToUpdate;
-
-  const uniqueUpdatedGroupsMember = preventDuplicates([
-    ...groupsMember,
-    groupToUpdateId
-  ]);
-  // eslint-disable-next-line require-atomic-updates
-  userToUpdate.groupsMember = [...uniqueUpdatedGroupsMember];
-
-  const uniqueUpdatedGroupsInvitedTo = preventDuplicates(
-    filterElementOut(groupsInvitedTo)(groupToUpdateId)
-  );
-  // eslint-disable-next-line require-atomic-updates
-  userToUpdate.groupsInvitedTo = [...uniqueUpdatedGroupsInvitedTo];
-
-  await userToUpdate.save();
-};
-
-const acceptInvitaion = async (userToUpdate, groupToUpdate) => {
-  try {
-    await Promise.all([
-      saveGroupOnInvitationAccepted(userToUpdate, groupToUpdate),
-      saveUserOnInvitationAccepted(userToUpdate, groupToUpdate)
-    ]);
-
-    return;
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
-const invite = async (groupToUpdate, userToUpdate) => {
-  try {
-    const { invited, _id: groupToUpdateId } = groupToUpdate;
-    const { groupsInvitedTo } = userToUpdate;
-
-    const uniqueInvited = preventDuplicates([...invited, userToUpdate]);
-    groupToUpdate.invited = [...uniqueInvited];
-    await groupToUpdate.save();
-
-    const uniqueGroupsInvitedTo = preventDuplicates([
-      ...groupsInvitedTo,
-      groupToUpdateId
-    ]);
-    // eslint-disable-next-line require-atomic-updates
-    userToUpdate.groupsInvitedTo = [...uniqueGroupsInvitedTo];
-
-    return await userToUpdate.save();
-  } catch (error) {
-    console.error({ error });
-  }
-};
-
 export const update = async (req, res) => {
   const {
     body,
@@ -165,7 +91,7 @@ export const update = async (req, res) => {
   } = req;
   const { email = '', action } = body;
   const { ACCEPT, INVITE, REJECT } = ACTIONS;
-  //TODO: detect what changes user is trying to do and make them properly
+
   try {
     const userToUpdate = await User.findOne({ email });
     const groupToUpdate = await Group.findOne({ _id: groupId });
@@ -180,7 +106,7 @@ export const update = async (req, res) => {
         console.log('Invitation sent');
         break;
       case REJECT:
-        console.log({ C: 'Currently reject the member is not possible' });
+        console.log('Currently reject the member is not possible');
         break;
     }
 

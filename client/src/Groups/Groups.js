@@ -2,26 +2,18 @@ import React from 'react';
 import Create from './Create';
 import Link from '../UI/Link';
 
-const GroupMembers = ({ members, users }) => (
-  <div>
-    {members.map(member => {
-      const { name = '' } = users[member] || {};
-      return <div key={member}>{name}</div>;
-    })}
-  </div>
-);
-
-const Group = ({ name = '', id, members, users }) => {
+const Group = ({ name = '', id }) => {
   const path = `/groups/${id}`;
 
   return (
     <div className="group">
       <Link path={path}>
         <h2>name: {name}</h2>
-        <h3>Members:</h3>
-        {members && members.length > 0 && (
-          <GroupMembers members={members} users={users} />
-        )}
+        <h3>Description:</h3>
+        <p>
+          It is a long established fact that a reader will be distracted by the
+          readable content of a page when looking at its layout.
+        </p>
       </Link>
     </div>
   );
@@ -31,9 +23,8 @@ export const GroupList = ({ invited = false, groups, currentUser, users }) => {
   const userGroupsIds = invited
     ? currentUser.groupsInvitedTo
     : currentUser.groupsMember;
-  console.log({ userGroupsIds });
+
   return userGroupsIds.map(groupId => {
-    console.log({ groups, currentUser, users });
     const { name, members = [] } = groups[groupId];
 
     return (
