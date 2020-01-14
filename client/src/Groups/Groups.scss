@@ -1,5 +1,6 @@
 .groups-wrapper {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .group {
@@ -9,6 +10,7 @@
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 0;
+  margin: 0 5px;
 }
 
 .avatar-wrapper {

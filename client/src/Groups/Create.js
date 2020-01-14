@@ -26,11 +26,19 @@ const Create = ({ currentUser }) => {
     <div>
       <h1>Create group</h1>
       <form
+        className="row-spacing"
         onSubmit={() => {
           currentUser && onCreateGroup({ user: currentUser, name });
         }}
       >
-        <input onChange={setGroupName} type="text" />
+        <div className="field">
+          <label>Name:</label>
+          <input
+            onChange={setGroupName}
+            placeholder="My awesome group"
+            type="text"
+          />
+        </div>
         <input type="submit" value="Create" />
       </form>
     </div>

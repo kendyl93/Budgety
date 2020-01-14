@@ -49,7 +49,7 @@ const Groups = ({ allData: { currentUser, groups, users } }) => {
 
       <h1>Your groups</h1>
       {groups && (
-        <div className="groups-wrapper col-spacing row-spacing">
+        <div className="groups-wrapper">
           <GroupList currentUser={currentUser} groups={groups} users={users} />
         </div>
       )}

@@ -51,7 +51,7 @@ const Member = ({
           <AdminIcon />
         </td>
       ) : (
-        undefined
+        <td></td>
       )}
     </tr>
   );
