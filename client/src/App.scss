@@ -165,6 +165,12 @@ table {
   }
 
   tr {
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     th:first-child,
     td:first-child {
       width: 18px;
