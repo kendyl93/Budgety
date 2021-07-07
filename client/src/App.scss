@@ -80,6 +80,7 @@ img {
 }
 
 .main-container {
+  background-color: #fafafa;
   width: 100%;
   padding-top: 60px;
 }
@@ -155,10 +156,22 @@ input[type='submit'] {
 }
 
 table {
-  display: flex;
-  flex-direction: column;
+  overflow-x: auto;
+  display: block;
+  table-layout: fixed;
+
+  @media screen and (min-width: $mobile-breakpoint) {
+    overflow-x: hidden;
+    display: table;
+  }
 
   tr {
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     th:first-child,
     td:first-child {
       width: 18px;

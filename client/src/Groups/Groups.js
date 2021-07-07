@@ -25,16 +25,19 @@ export const GroupList = ({ invited = false, groups, currentUser, users }) => {
     : currentUser.groupsMember;
 
   return userGroupsIds.map(groupId => {
-    const { name, members = [] } = groups[groupId];
+    const maybeGroup = groups[groupId];
+    const { name, members = [] } = maybeGroup || {};
 
     return (
-      <Group
-        id={groupId}
-        key={groupId}
-        members={members}
-        name={name}
-        users={users}
-      />
+      maybeGroup && (
+        <Group
+          id={groupId}
+          key={groupId}
+          members={members}
+          name={name}
+          users={users}
+        />
+      )
     );
   });
 };
@@ -46,7 +49,7 @@ const Groups = ({ allData: { currentUser, groups, users } }) => {
 
       <h1>Your groups</h1>
       {groups && (
-        <div className="groups-wrapper col-spacing row-spacing">
+        <div className="groups-wrapper">
           <GroupList currentUser={currentUser} groups={groups} users={users} />
         </div>
       )}

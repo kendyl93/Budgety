@@ -65,7 +65,8 @@ export const create = async (req, res) => {
       const group = new Group({
         _id: id,
         name,
-        members: currentUser
+        members: currentUser,
+        owner: currentUser
       });
 
       const userGroups = currentUser.groupsMember;

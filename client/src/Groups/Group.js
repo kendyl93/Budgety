@@ -29,8 +29,10 @@ const Group = ({ groups, users, currentUser }) => {
     name: sourceName,
     members: sourceMembersIds,
     invited: sourceInvitedIds,
-    description: sourceDescription = ''
-  } = groups[id];
+    description: sourceDescription = '',
+    owner: ownerId
+  } = groups[id] || {};
+  const { _id: currentUserId } = currentUser;
 
   const [name, setName] = useState(sourceName);
   const [description, setDescription] = useState(sourceDescription);
@@ -40,7 +42,7 @@ const Group = ({ groups, users, currentUser }) => {
 
   const path = `/groups/${id}/members/new/`;
 
-  const maybeAlreadyMember = true;
+  const maybeAlreadyMember = sourceMembersIds.includes(currentUserId);
   const maybeInvitedUsers = any(sourceInvitedIds);
 
   return (
@@ -51,8 +53,10 @@ const Group = ({ groups, users, currentUser }) => {
       </div>
       <form className="row-spacing">
         <div className="form-element">
-          <span>Name:</span>
-          <input onChange={onChangeName} value={name} />
+          <div className="field">
+            <label>Name:</label>
+            <input onChange={onChangeName} value={name} />
+          </div>
         </div>
         <div className="form-element">
           <span>Description:</span>
@@ -65,6 +69,7 @@ const Group = ({ groups, users, currentUser }) => {
           currentUser={currentUser}
           groupId={id}
           membersIds={sourceMembersIds}
+          ownerId={ownerId}
           users={users}
         />
         {maybeAlreadyMember && (
